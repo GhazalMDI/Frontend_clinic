@@ -1,0 +1,78 @@
+
+<div class="container-fluid">
+  <section class="mt-5" *ngFor="let i of banners">
+    <div class="row d-flex align-items-center justify-content-center"  >
+      <div class="col-12 text-center">
+        <!-- {{i.description}} -->
+      </div>
+      <div class="col-12 text-center">
+        <img src="{{i.image}}"> 
+      </div>
+    </div>
+  </section> 
+  
+  <section class="container mt-4">
+    <div class="row flex-row-reverse d-flex align-items-center justify-content-between" *ngFor="let a of abouts">
+      <div class="col-5 text-end">
+         <p class="fw-bold fs-2">
+          درباره ی ما
+         </p>
+         <p>{{a.title}}</p>
+         <p>{{a.description}}</p>
+        </div>
+        <div class="col-6">
+          <div class="row d-flex align-items-center ">
+            <div class="col-4" *ngFor="let i of a.images_about">
+            <img src="{{i.img}}" width="150px">
+            </div>
+          </div>
+        </div>
+    </div>
+  </section>
+  
+</div>
+
+
+
+
+
+<!-- <p>hiii</p>
+
+<div id="carouselExampleCaptions" class="carousel slide">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" *ngFor="let i of banners">
+      <img [src]=i.image class="d-block w-100" alt="..."> -->
+      <!-- <div class="carousel-caption d-none d-md-block">
+        <p>{{i.description}}</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button> -->
+<!-- </div> --> 
+
+
+
+
+  
+  <!-- <div *ngIf="abouts.length > 0">
+    <h2>About Us</h2>
+    <ul>
+      <li *ngFor="let about of abouts">
+        <p>{{about.title}}</p>
+        <p>{{ about.description }}</p>
+      </li>
+    </ul>
+  </div> -->
+   
