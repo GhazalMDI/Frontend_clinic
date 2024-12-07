@@ -1,0 +1,15 @@
+body{
+    height: 100vh;
+    overflow-y: hidden;
+}
+:root{
+    height: 100vh;
+    overflow-y: hidden;
+
+}
+
+
+h4{
+    font-family: vazir;
+    font-weight: bold;
+}

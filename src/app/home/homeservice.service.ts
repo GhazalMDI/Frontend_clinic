@@ -11,12 +11,18 @@ interface About{
   title:string;
   description:string
 }
+interface Department{
+  title:string;
+  description:string;
+  image:string;
+}
 
 
 interface ApiResponse{
   data:{
       banners:Banner[];
       abouts:About[];
+      department:Department[];
   }
 }
 

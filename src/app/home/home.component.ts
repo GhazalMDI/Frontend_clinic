@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HomeserviceService } from './homeservice.service';
 import { error } from 'console';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,7 +12,8 @@ import { error } from 'console';
 export class HomeComponent implements OnInit{
   banners:any[]=[];
   abouts:any[]=[];
-  constructor(private homeService:HomeserviceService){}
+  department:any[]=[];
+  constructor(private homeService:HomeserviceService,private route:Router){}
 
 
   ngOnInit(): void {
@@ -24,6 +26,11 @@ export class HomeComponent implements OnInit{
         console.error('error fatching data',error);
       }
     )
+  }
+
+  GoToDepartmentDetail(d_id:number){
+    this.route.navigate(['list',d_id])
+
   }
 
 }
