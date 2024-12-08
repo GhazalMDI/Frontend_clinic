@@ -17,20 +17,20 @@ export class HomeComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.homeService.getData().subscribe(
-      (response)=>{
-        this.banners = response.data.banners;
-        this.abouts = response.data.abouts;
-      },
-      (error)=>{
-        console.error('error fatching data',error);
-      }
-    )
+  //   this.homeService.getData().subscribe(
+  //     (response)=>{
+  //       this.banners = response.data.banners;
+  //       this.abouts = response.data.abouts;
+  //     },
+  //     (error)=>{
+  //       console.error('error fatching data',error);
+  //     }
+  //   )
+  // }
+
+  // GoToDepartmentDetail(d_id:number){
+  //   this.route.navigate(['list',d_id])
+
   }
-
-  GoToDepartmentDetail(d_id:number){
-    this.route.navigate(['list',d_id])
-
-  }
-
 }
+

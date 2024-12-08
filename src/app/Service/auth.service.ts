@@ -7,10 +7,27 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private base_url = 'http://127.0.0.1:8000/API/Accounts'
+  private isLoggedIn = false;
 
-  // http://127.0.0.1:8000/API/Accounts/register/
+
 
   constructor(private http:HttpClient) { }
+
+
+  setToken(access: string,refresh:string): void {
+    localStorage.setItem('accessToken', access);
+    localStorage.setItem('refreshToken',refresh)
+    this.isLoggedIn = true;
+  }
+  clearToken():void{
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    this.isLoggedIn = false;
+  }
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+  
 
   register(phone_number:string): Observable<any>{
     const url = `${this.base_url}/register/`;
@@ -24,9 +41,22 @@ export class AuthService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${tempToken}`
     });
-    console.log(headers)
     return this.http.post(url,{code},{headers});
    }
+
+  isUserLoggedIn(): boolean {
+   return !!localStorage.getItem('accessToken')
+  }
+
+  login(): void {
+    this.isLoggedIn = true;
+  }
+
+  // خروج کاربر
+  logout(): void {
+    this.clearToken()
+    this.isLoggedIn = false;
+  }
 
    
 

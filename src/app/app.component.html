@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary py-4 shadow">
   <div class="container-fluid d-flex align-items-end">
-    <a class="navbar-brand" href="#">کلینیک اعصاب و روان</a>
+    <a class="navbar-brand" href="#">کلینیک تخصصی مغز و اعصاب</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -10,36 +10,43 @@
           <a class="nav-link " aria-current="page" href="#">صفحه اصلی</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " aria-current="page" href="#" routerLink="/login/register/">ثبت نام | ورود</a>
+          <a  class="nav-link " aria-current="page"  routerLink="/loginRegister">ثبت نام | ورود</a>
+        </li>
+        <li class="nav-item">
+          <a  class="nav-link"  aria-current="page" *ngIf="authService.isUserLoggedIn()" (click)="logOut()">خروج</a>
+        </li>
+        <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           حساب کاربری
+          </a> 
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">پروفایل</a></li> 
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li> 
+             <li><a class="dropdown-item" href="#">خروج </a></li>  
+         </ul> 
+         </li>  -->
+        <li class="nav-item">
+          <a class="nav-link" href="#"  *ngIf="authService.isUserLoggedIn()">حساب کاربری</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">درباره ما</a>
         </li>
-        <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li> -->
+       
         <li class="nav-item">
           <a class="nav-link" aria-disabled="true">رزرو نوبت</a>
         </li>
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">
+        <!-- <button class="btn btn-outline-success" type="submit">
           <i class="bi bi-search"></i>
-        </button>
+        </button> -->
       </form>
     </div>
   </div>
 </nav>
-<app-register></app-register>
+<!-- <app-register></app-register> -->
 
 <!-- <app-home></app-home> -->
 

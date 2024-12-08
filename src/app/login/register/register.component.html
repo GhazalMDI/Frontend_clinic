@@ -12,7 +12,6 @@
                     <!-- <div class="d-flex align-items-end flex-column justify-content-end"> -->
                         <button class="btn btn-danger">
                             <span>Sign in with google</span>
-                            <
                         </button>
                     <!-- </div> -->
                 </form>
@@ -23,10 +22,10 @@
 
 
             </div>
-            <div *ngIf='is_send' class="col-12 p-4 d-flex align-items-center justify-content-center flex-column ">
-                <h4 class="text-success">ورود به سایت </h4>
-                <p>کد به شماره ی شما ارسال شد</p>
-                <form action="" method="post" novalidate (ngSubmit)="onVerifyRegister()" >
+            <div *ngIf='is_send' class="col-12  p-4 d-flex align-items-center justify-content-center flex-column border rounded " style="height: 20rem; width: 28rem;">
+                <h4 class="mb-5">ورود به حساب کاربری </h4>
+                <p class="small">{{message}}</p>
+                <form action="" method="post" class="d-flex gap-3  justify-content-center flex-column align-items-stretch"  method="post"  novalidate (ngSubmit)="onVerifyRegister()" >
                     <input class="form-control" [(ngModel)]="otp_code" name="otp_code" type="text">
                     <button class="btn btn-primary" type="submit">ورود</button>
                 </form>
@@ -45,7 +44,7 @@
     </div> -->
 
 
-    <p>{{message}}</p>
+    <p></p>
 
 
 
