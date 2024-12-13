@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { FormGroup, FormControl, FormArray, NgForm, FormsModule } from '@angular/forms';
+import { SocialLoginModule, SocialAuthServiceConfig,GoogleSigninButtonModule  } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider} from '@abacritt/angularx-social-login';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,12 +21,32 @@ import { RegisterComponent } from './login/register/register.component';
     RegisterComponent
   ],
   imports: [
+    GoogleSigninButtonModule,
+    SocialLoginModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
   ],
   providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        lang: 'en',
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '971156426829-ashet68haj0smovhv1imq97l1s8jrqnb.apps.googleusercontent.com'
+            )
+          },
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    },
     provideClientHydration()
   ],
   bootstrap: [AppComponent]

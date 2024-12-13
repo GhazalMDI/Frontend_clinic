@@ -10,7 +10,7 @@
           <a class="nav-link " aria-current="page" href="#">صفحه اصلی</a>
         </li>
         <li class="nav-item">
-          <a  class="nav-link " aria-current="page"  routerLink="/loginRegister">ثبت نام | ورود</a>
+          <a  class="nav-link " aria-current="page" *ngIf="!authService.isUserLoggedIn()" routerLink="/loginRegister">ثبت نام | ورود</a>
         </li>
         <li class="nav-item">
           <a  class="nav-link"  aria-current="page" *ngIf="authService.isUserLoggedIn()" (click)="logOut()">خروج</a>
