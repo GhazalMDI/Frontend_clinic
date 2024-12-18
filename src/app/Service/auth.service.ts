@@ -34,6 +34,11 @@ export class AuthService {
     return this.http.post(url,{phone_number:phone_number});
   }
 
+  sendToken(token:string):Observable<any>{
+    const url = 'http://127.0.0.1:8000/API/Accounts/GoogleLogin/'
+    return this.http.post(url,{token:token})
+  }
+
 
   
    verifyRegister(tempToken:string,code:string):Observable<any>{

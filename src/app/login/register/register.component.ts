@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { AuthService } from '../../Service/auth.service';
 import { Router } from '@angular/router';
 import { GoogleLoginProvider, SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { response } from 'express';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { GoogleAuthService } from '../../Service/google-auth.service';
+// import { authConfig } from '../../auth.config';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements AfterViewInit {
 [x: string]: any;
 is_send : boolean=false;
 phone_number:string = ''
@@ -19,20 +22,51 @@ tempToken:string = ''
 message:string = ''
 
 
-constructor(private authSerice:AuthService,private router: Router,private http:HttpClient,private socialservice:SocialAuthService){}
+constructor(private authSerice:AuthService,private router: Router,private http:HttpClient,private googleAuthService: GoogleAuthService){
+}
 
+ngAfterViewInit(): void {
+  this.googleAuthService.initializeGoogleSignIn((token) => {
+    console.log('Google Token:', token);
+    this.sendTokenToBackend(token);
+  });
+}
 
-signInWithGoogle():void{
-  console.log('hiii')
-  this.socialservice.signIn(GoogleLoginProvider.PROVIDER_ID).then((user:SocialUser)=>{
-    console.log('hiiiiii')
-    console.log(user);
-    this.http.post('http://127.0.0.1:8000/API/Accounts/GoogleLogin/',{token:user.idToken}).subscribe((response:any)=>{
-      console.log(response)
-      this.authSerice.setToken(response.tokens.access,response.tokens.refresh)
+sendTokenToBackend(token: string): void {
+  this.authSerice.sendToken(token).subscribe(
+      (response) => {
+        console.log('Backend Response:', response);
+        this.message = 'ورود با موفقیت انجام شد!';
+        this.authSerice.setToken(response.tokens.access,response.tokens.refresh);
+        console.log(response.tokens.access)
+        console.log(response.tokens.refresh)
+        this.router.navigate([''])
+      },
+      (error) => {
+        console.error('Error:', error);
+        this.message = 'مشکلی در ورود با گوگل پیش آمد.';
+      }
+    );
+}
+
+onVerifyRegister() {
+
+  this.authSerice.verifyRegister(this.tempToken, this.otp_code).subscribe(
+    (response) => {
+      this.message = response.message;
+      this.authSerice.setToken(response.tokens.access,response.tokens.refresh);
+      console.log(response.tokens.access)
+      console.log(response.tokens.refresh)
+
       this.router.navigate(['']);
-    })
-  })
+      this.authSerice.login()
+
+    },
+    (error) => {
+      console.error('Verification failed:', error);
+      this.message = error.error.message || 'خطایی رخ داده است';
+    }
+  );
 }
 
 
@@ -55,23 +89,4 @@ onRegister(){
 }
 
 
-onVerifyRegister() {
-
-  this.authSerice.verifyRegister(this.tempToken, this.otp_code).subscribe(
-    (response) => {
-      this.message = response.message;
-      this.authSerice.setToken(response.tokens.access,response.tokens.refresh);
-      console.log(response.tokens.access)
-      console.log(response.tokens.refresh)
-
-      this.router.navigate(['']);
-      this.authSerice.login()
-
-    },
-    (error) => {
-      console.error('Verification failed:', error);
-      this.message = error.error.message || 'خطایی رخ داده است';
-    }
-  );
-}
 }

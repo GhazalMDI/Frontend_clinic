@@ -19,6 +19,7 @@ export class AppComponent  {
  
   logOut(): void {
     const refreshToken = this.authService.getRefreshToken();
+    alert('logout first!')
     console.log(refreshToken);
   
     // اگر توکن موجود نبود، به صفحه ورود هدایت می‌شود
