@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { response } from 'express';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { GoogleAuthService } from '../../Service/google-auth.service';
+import { Console } from 'node:console';
 // import { authConfig } from '../../auth.config';
 
 @Component({
@@ -36,10 +37,6 @@ sendTokenToBackend(token: string): void {
   this.authSerice.sendToken(token).subscribe(
       (response) => {
         console.log('Backend Response:', response);
-        this.message = 'ورود با موفقیت انجام شد!';
-        this.authSerice.setToken(response.tokens.access,response.tokens.refresh);
-        console.log(response.tokens.access)
-        console.log(response.tokens.refresh)
         this.router.navigate([''])
       },
       (error) => {

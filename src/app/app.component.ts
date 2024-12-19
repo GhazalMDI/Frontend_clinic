@@ -19,23 +19,12 @@ export class AppComponent  {
  
   logOut(): void {
     const refreshToken = this.authService.getRefreshToken();
-    alert('logout first!')
-    console.log(refreshToken);
-  
-    // اگر توکن موجود نبود، به صفحه ورود هدایت می‌شود
-    if (!refreshToken) {
-      this.router.navigate(['/loginRegister']);
-      return;
-    }
-  
-    // ارسال درخواست خروج به سرور
     this.http.post('http://127.0.0.1:8000/API/Accounts/logout/', { refresh_token: refreshToken })
       .subscribe(
         (response) => {
           console.log('Logout successful', response);
-          // پاک کردن توکن‌ها پس از موفقیت آمیز بودن خروج
-          this.authService.clearToken(); // پاک کردن accessToken از localStorage
-          this.router.navigate(['/loginRegister']); // هدایت به صفحه ورود
+          this.authService.clearToken(); 
+          this.router.navigate(['/loginRegister']);
         },
         (error) => {
           console.error('Logout failed', error);
