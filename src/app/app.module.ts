@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { DepartmentComponent } from './department/department.component';
 import { RegisterComponent } from './login/register/register.component'; 
 import { authConfig } from './auth.config';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { authConfig } from './auth.config';
     AppComponent,
     HomeComponent,
     DepartmentComponent,
-    RegisterComponent
+    RegisterComponent,
+    ProfileComponent
   ],
   imports: [
     OAuthModule.forRoot(),

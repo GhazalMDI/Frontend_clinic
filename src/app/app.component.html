@@ -12,6 +12,9 @@
         <li class="nav-item">
           <a  class="nav-link " aria-current="page" *ngIf="!authService.isUserLoggedIn()" routerLink="/loginRegister">ثبت نام | ورود</a>
         </li>
+
+
+
         <li class="nav-item">
           <a  class="nav-link"  aria-current="page" *ngIf="authService.isUserLoggedIn()" (click)="logOut()">خروج</a>
         </li>
@@ -27,7 +30,7 @@
          </ul> 
          </li>  -->
         <li class="nav-item">
-          <a class="nav-link" href="#"  *ngIf="authService.isUserLoggedIn()">حساب کاربری</a>
+          <a class="nav-link" href="#"  *ngIf="authService.isUserLoggedIn()" routerLink="/profile">حساب کاربری</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">درباره ما</a>

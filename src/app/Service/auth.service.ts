@@ -27,6 +27,9 @@ export class AuthService {
   getRefreshToken(): string | null {
     return localStorage.getItem('refreshToken');
   }
+  getAccessToken():string | null{
+    return localStorage.getItem('accessToken');
+  }
   
 
   register(phone_number:string): Observable<any>{
