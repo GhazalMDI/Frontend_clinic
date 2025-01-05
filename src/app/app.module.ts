@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { FormGroup, FormControl, FormArray, NgForm, FormsModule } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, NgForm, FormsModule,ReactiveFormsModule  } from '@angular/forms';
 import { SocialLoginModule, SocialAuthServiceConfig,GoogleSigninButtonModule  } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider} from '@abacritt/angularx-social-login';
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
@@ -31,36 +31,18 @@ import { ProfileComponent } from './profile/profile.component';
     SocialLoginModule,
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
   ],
   providers: [
-    // {
-    //   provide: 'SocialAuthServiceConfig',
-    //   useValue: {
-    //     autoLogin: false,
-    //     lang: 'en',
-    //     providers: [
-    //       {
-    //         id: GoogleLoginProvider.PROVIDER_ID,
-    //         provider: new GoogleLoginProvider(
-    //           '971156426829-ashet68haj0smovhv1imq97l1s8jrqnb.apps.googleusercontent.com'
-    //         )
-    //       },
-    //     ],
-    //     onError: (err) => {
-    //       console.error(err);
-    //     }
-    //   } as SocialAuthServiceConfig,
-    // },
-    // provideClientHydration()
+
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule  {
   constructor(private oauthService: OAuthService) {
     this.oauthService.configure(authConfig);
-    // this.oauthService.loadDiscoveryDocumentAndLogin(); // لاگین اتوماتیک
   }
   
  }

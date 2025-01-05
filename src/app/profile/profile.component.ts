@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ProfileService } from '../Service/profile.service';
 import { response } from 'express';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -10,17 +11,63 @@ import { response } from 'express';
 export class ProfileComponent {
 Accesstoken:string=''
 information : any[] = []
+DoctorprofileForm!:FormGroup
+ProfileForm!:FormGroup
+is_doctor:Boolean=false;
+image!:String;
 
+ constructor(private fb:FormBuilder, private prof:ProfileService){}
 
- constructor( private prof:ProfileService){}
+  ngOnInit(){
+    this.DoctorprofileForm = this.fb.group({
+      first_name:[''],
+      last_name:[''],
+      birthday:[''],
+      national_code:[''],
+      bio:[''],
+      landline_phone:[''],
+      medical_license_number:['']
+
+    })
+    this.ProfileForm = this.fb.group({
+      first_name:[''],
+      last_name:[''],
+      birthday:[''],
+      national_code:[''],
+    })
+    this.showProfile();
+  }
 
  showProfile(){
-  console.log('you is here')
   this.prof.GetProfileData().subscribe(
     (response)=>{
       console.log(response.data)
-      this.information = this.information = Array.isArray(response.data) ? response.data : [response.data];
-      console.log(response)
+      const userData = response.data.user;
+      if (response.data.status_doctor = true) {
+        this.is_doctor = true
+        this.DoctorprofileForm.patchValue({
+          first_name:userData.user.first_name,
+          last_name:userData.user.last_name,
+          birthday:userData.user.birthday,
+          national_code:userData.user.national_code,
+          bio:userData.bio,
+          landline_phone:userData.landline_phone,
+          medical_license_number:userData.medical_license_number
+        })
+        this.image = userData.image
+      }
+      else{
+        this.is_doctor = false
+        this.ProfileForm.patchValue({
+          first_name:userData.first_name,
+          last_name:userData.last_name,
+          birthday:userData.birthday,
+          national_code:userData.national_code,
+        })
+
+        this.information = this.information = Array.isArray(response.data) ? response.data : [response.data];
+      }
+     
     },
     (error) => {
       console.error('Error occurred:', error);
