@@ -11,8 +11,9 @@ export class ProfileService {
 
 
   GetProfileData():Observable<any>{
-    const url =  'http://127.0.0.1:8000/API/Accounts/profile'
+    const url =  'http://127.0.0.1:8000/API/Accounts/profile/'
     let accessToken = this.authService.getAccessToken()
+    console.log('you is profile service')
     console.log(accessToken)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`
