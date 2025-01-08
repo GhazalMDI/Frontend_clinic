@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ProfileService } from '../Service/profile.service';
 import { response } from 'express';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { error } from 'console';
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +14,7 @@ Accesstoken:string=''
 information : any[] = []
 DoctorprofileForm!:FormGroup
 ProfileForm!:FormGroup
-is_doctor:Boolean=false;
+is_doctor:Boolean=true;
 image!:String;
 
  constructor(private fb:FormBuilder, private prof:ProfileService){}
@@ -43,7 +44,7 @@ image!:String;
     (response)=>{
       console.log(response.data)
       const userData = response.data.user;
-      if (response.data.status_doctor = true) {
+      if (response.data.status_doctor == true) {
         this.is_doctor = true
         this.DoctorprofileForm.patchValue({
           first_name:userData.user.first_name,
@@ -56,7 +57,10 @@ image!:String;
         })
         this.image = userData.image
       }
-      else{
+      else if (response.data.status_doctor == false){
+        console.log('the user')
+        console.log(response.data.status_doctor)
+
         this.is_doctor = false
         this.ProfileForm.patchValue({
           first_name:userData.first_name,
@@ -65,12 +69,25 @@ image!:String;
           national_code:userData.national_code,
         })
 
-        this.information = this.information = Array.isArray(response.data) ? response.data : [response.data];
       }
-     
+      this.information = this.information = Array.isArray(response.data) ? response.data : [response.data];
+
     },
     (error) => {
       console.error('Error occurred:', error);
+    }
+  )
+ }
+
+ editProfile(){
+  alert('hiiii')
+  const formData = this.is_doctor ? this.DoctorprofileForm.value : this.ProfileForm.value;
+  this.prof.editProfile(formData).subscribe(
+    (response)=>{
+      console.log('profile updated successfuly',response);
+    },
+    (error)=>{
+      console.log('Error updating',error);
     }
   )
  }

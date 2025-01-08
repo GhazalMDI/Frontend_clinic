@@ -22,5 +22,13 @@ export class ProfileService {
     return this.http.get(url,{headers})
 
   }
+  editProfile(data:any):Observable<any>{
+    const url = 'http://127.0.0.1:8000/API/Accounts/profile/'
+    let accessToken = this.authService.getAccessToken()
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`
+    });
+    return this.http.patch(url,data,{headers})
+  }
 }
 
