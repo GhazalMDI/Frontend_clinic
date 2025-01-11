@@ -1,15 +1,48 @@
-<div class="d-flex flex-row-reverse align-items-start mt-2">
-    <div style="height: 60vh; width: 10rem;" class="nav flex-column border rounded nav-pills ms-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <button (click)="showProfile()" class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">حساب کاربری</button>
-      <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">نوبت</button>
-      <button class="nav-link" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false">Disabled</button>
-      <button class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</button>
-      <button class="nav-link" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</button>
-    </div>
-    <div class="tab-content" id="v-pills-tabContent">
-      <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+<!-- modal  -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">ویرایش اطلاعات</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="DoctorprofileForm" *ngIf="is_doctor" style="direction: rtl;">
+          <div class="d-flex align-items-start flex-column ">
+            <label for="first_name_doctor">نام</label>
+            <input class="form-control" id="first_name_doctor" type="text" formControlName="first_name">
+          </div>
+          <div class="d-flex align-items-start flex-column">
+            <label for="last_name_doctor">نام خانوادگی</label>
+            <input class="form-control" id="last_name_doctor" type="text" formControlName="last_name">
+          </div>
+          <div class="d-flex align-items-start flex-column">
+            <label for="birthday_doctor">تاریخ تولد</label>
+            <input style="text-align: end;" class="form-control " id="birthday_doctor" type="date"
+              formControlName="birthday">
+          </div>
+          <div class="d-flex align-items-start flex-column">
+            <label for="national_code_doctor">کد ملی</label>
+            <input class="form-control" id="national_code_doctor" type="text" formControlName="national_code">
+          </div>
+          <div class="d-flex align-items-start flex-column">
+            <label for="landline_phone">شماره مطب</label>
+            <input class="form-control" id="landline_phone" type="text" formControlName="landline_phone">
+          </div>
+          <div class="d-flex align-items-start flex-column">
+            <label for="medical_license_number">شماره نظام پزشکی</label>
+            <input class="form-control" id="medical_license_number" type="text"
+              formControlName="medical_license_number">
+          </div>
 
-        <form [formGroup]="ProfileForm" *ngIf="!is_doctor">
+          <div class="d-flex align-items-start flex-column">
+            <label for="bio">بیوگرافی</label>
+            <textarea class="form-control" id="bio" formControlName="bio"></textarea>
+          </div>
+        </form>
+
+
+        <form [formGroup]="ProfileForm" *ngIf="!is_doctor" style="direction: rtl;">
           <div>
             <label for="first_name">نام </label>
             <input class="form-control" id="first_name" type="text" formControlName="first_name">
@@ -20,138 +53,143 @@
           </div>
           <div>
             <label for="birthday">تاریخ تولد</label>
-            <input class="form-control" id="birthday" type="date" formControlName="birthday">
+            <input style="text-align: end;" class="form-control" id="birthday" type="date" formControlName="birthday">
           </div>
           <div>
             <label for="national_code">کد ملی</label>
             <input class="form-control" id="national_code" type="text" formControlName="national_code">
           </div>
-          <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="submit" class="btn btn-success">ویرایش</button>
         </form>
-
-
-       <div class="d-flex align-items-start justify-content-around" style="width: 80vw;">
-        <img alt="" width="200px" height="200px" class="rounded-pill" [src]="image">
-        <form [formGroup]="DoctorprofileForm" *ngIf="is_doctor">
-        <div class="d-flex align-items-end flex-column ">
-          <label for="first_name_doctor">نام</label>
-          <input class="form-control" readonly id="first_name_doctor" type="text" formControlName="first_name">
-        </div>
-        <div class="d-flex align-items-end flex-column">    
-          <label for="last_name_doctor">نام خانوادگی</label>
-          <input  class="form-control" readonly  id="last_name_doctor" type="text" formControlName="last_name">
-        </div>
-        <div class="d-flex align-items-end flex-column">
-          <label for="birthday_doctor">تاریخ تولد</label>
-          <input  class="form-control"   readonly id="birthday_doctor" type="date" formControlName="birthday">
-        </div>
-          <div class="d-flex align-items-end flex-column">
-            <label for="national_code_doctor">کد ملی</label>
-            <input  class="form-control"   readonly id="national_code_doctor" type="text" formControlName="national_code">
-          </div>
-            <div class="d-flex align-items-end flex-column">
-              <label for="landline_phone">شماره مطب</label>
-              <input  class="form-control"   readonly id="landline_phone" type="text" formControlName="landline_phone">
-          </div>
-          <div class="d-flex align-items-end flex-column">
-            <label for="medical_license_number">شماره نظام پزشکی</label>
-            <input  class="form-control"   readonly id="medical_license_number" type="text" formControlName="medical_license_number">
-          </div>
-
-          <div class="d-flex align-items-end flex-column">
-            <label for="bio">بیوگرافی</label>
-            <textarea  class="form-control"   readonly id="bio" formControlName="bio"></textarea>
-          </div>
-          <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="submit" class="btn btn-success">ویرایش</button>
-
-        </form>
-
-       </div>
-
-
-
-
 
       </div>
-      <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab" tabindex="0">...</div>
+      <div class="modal-footer">
+        <button (click)="editProfile()" class="btn btn-primary">ذخیره تغییرات</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+      </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="isToastVisible"
+  [ngClass]="{'toast-success': toastMessage?.type === 'success', 'toast-error': toastMessage?.type === 'error'}"
+  class="toast-notification">
+  {{ toastMessage?.message }}
+</div>
 
 
-
-  <!-- modal  -->
-
-    
-
-   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="DoctorprofileForm" *ngIf="is_doctor">
-            <div class="d-flex align-items-end flex-column ">
-              <label for="first_name_doctor">نام</label>
-              <input class="form-control"  id="first_name_doctor" type="text" formControlName="first_name">
-            </div>
-            <div class="d-flex align-items-end flex-column">    
-              <label for="last_name_doctor">نام خانوادگی</label>
-              <input  class="form-control"   id="last_name_doctor" type="text" formControlName="last_name">
-            </div>
-            <div class="d-flex align-items-end flex-column">
-              <label for="birthday_doctor">تاریخ تولد</label>
-              <input  class="form-control" id="birthday_doctor" type="date" formControlName="birthday">
-            </div>
-              <div class="d-flex align-items-end flex-column">
-                <label for="national_code_doctor">کد ملی</label>
-                <input  class="form-control" id="national_code_doctor" type="text" formControlName="national_code">
-              </div>
-                <div class="d-flex align-items-end flex-column">
-                  <label for="landline_phone">شماره مطب</label>
-                  <input  class="form-control" id="landline_phone" type="text" formControlName="landline_phone">
-              </div>
-              <div class="d-flex align-items-end flex-column">
-                <label for="medical_license_number">شماره نظام پزشکی</label>
-                <input  class="form-control" id="medical_license_number" type="text" formControlName="medical_license_number">
-              </div>
-    
-              <div class="d-flex align-items-end flex-column">
-                <label for="bio">بیوگرافی</label>
-                <textarea  class="form-control" id="bio" formControlName="bio"></textarea>
-              </div>
-    
-            </form>
+<div class="container mt-4">
+  <div class="d-flex flex-row-reverse align-items-start">
+    <!-- Side Navigation -->
+    <div class="side-nav">
+      <div class="nav flex-column nav-pills align-self-stretch" id="v-pills-tab" role="tablist"
+        aria-orientation="vertical">
+        <button class="nav-link d-flex align-items-center justify-content-between active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home"
+          type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+          <i class="bi bi-person-circle"></i>
+          <span>حساب کاربری</span>
+        </button>
+        <!-- <div class="d-flex align-items-center justify-content-between flex-row-reverse"> -->
+          <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+            <i class="bi bi-calendar2-check"></i>
+            <span>نوبت ها</span>
+          </button>
+        <!-- </div> -->
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled"
+          type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false">
+          <i class="bi bi-x-circle"></i>
+          <span>آدرس</span>
+        </button>
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages"
+          type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+          <i class="bi bi-chat-left-text"></i>
+          <span>روزهای حضور</span>
+        </button>
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings"
+          type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+          <i class="bi bi-gear"></i>
+         <span> تنظیمات</span>
+        </button>
+      </div>
+    </div>
 
 
-          <form [formGroup]="ProfileForm" *ngIf="!is_doctor">
-            <div>
-              <label for="first_name">نام </label>
+    <!-- Tab Content -->
+    <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+      <!-- Profile Tab -->
+      <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab"
+        tabindex="0">
+        <div *ngIf="!is_doctor" class="mb-4">
+          <h5 class="mb-3">ویرایش اطلاعات کاربری</h5>
+          <form [formGroup]="ProfileForm">
+            <div class="mb-3">
+              <label for="first_name" class="form-label">نام</label>
               <input class="form-control" id="first_name" type="text" formControlName="first_name">
             </div>
-            <div>
-              <label for="last_name">نام خانوادگی</label>
+            <div class="mb-3">
+              <label for="last_name" class="form-label">نام خانوادگی</label>
               <input class="form-control" id="last_name" type="text" formControlName="last_name">
             </div>
-            <div>
-              <label for="birthday">تاریخ تولد</label>
-              <input class="form-control" id="birthday" type="date" formControlName="birthday">
+            <div class="mb-3">
+              <label for="birthday" class="form-label">تاریخ تولد</label>
+              <input class="form-control text-end" id="birthday" type="date" formControlName="birthday">
             </div>
-            <div>
-              <label for="national_code">کد ملی</label>
+            <div class="mb-3">
+              <label for="national_code" class="form-label">کد ملی</label>
               <input class="form-control" id="national_code" type="text" formControlName="national_code">
             </div>
+            <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              type="submit" class="btn btn-success">ویرایش</button>
           </form>
-  
         </div>
-        <div class="modal-footer">
-          <button (click)="editProfile()" class="btn btn-primary">ذخیره تغییرات</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+        <!-- Doctor Profile -->
+        <div class="" *ngIf="is_doctor" style="direction: rtl;">
+          <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
+          <div class="d-flex">
+            <img alt="Doctor Image" width="190px" height="180px" class="rounded-circle me-4" [src]="image">
+            <form [formGroup]="DoctorprofileForm" class="w-75">
+              <div class="mb-3">
+                <label for="first_name_doctor" class="form-label">نام</label>
+                <input class="form-control" readonly id="first_name_doctor" type="text" formControlName="first_name">
+              </div>
+              <div class="mb-3">
+                <label for="last_name_doctor" class="form-label">نام خانوادگی</label>
+                <input class="form-control" readonly id="last_name_doctor" type="text" formControlName="last_name">
+              </div>
+              <div class="mb-3">
+                <label for="birthday_doctor" class="form-label">تاریخ تولد</label>
+                <input class="form-control text-end" readonly id="birthday_doctor" type="date"
+                  formControlName="birthday">
+              </div>
+              <div class="mb-3">
+                <label for="landline_phone" class="form-label">شماره مطب</label>
+                <input class="form-control" readonly id="landline_phone" type="text" formControlName="landline_phone">
+              </div>
+              <div class="mb-3">
+                <label for="medical_license_number" class="form-label">شماره نظام پزشکی</label>
+                <input class="form-control" readonly id="medical_license_number" type="text"
+                  formControlName="medical_license_number">
+              </div>
+              <div class="mb-3">
+                <label for="bio" class="form-label">بیوگرافی</label>
+                <textarea class="form-control" readonly id="bio" formControlName="bio"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                type="submit" class="btn btn-success">ویرایش</button>
+            </form>
+          </div>
         </div>
       </div>
+
+      <!-- Other Tabs -->
+      <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"
+        tabindex="0">...</div>
+      <div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab"
+        tabindex="0">...</div>
+      <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab"
+        tabindex="0">...</div>
+      <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab"
+        tabindex="0">...</div>
     </div>
   </div>
+</div>
