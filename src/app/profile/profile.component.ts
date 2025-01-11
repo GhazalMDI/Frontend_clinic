@@ -3,6 +3,7 @@ import { ProfileService } from '../Service/profile.service';
 import { response } from 'express';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { error } from 'console';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +18,7 @@ ProfileForm!:FormGroup
 is_doctor:Boolean=true;
 image!:String;
 
- constructor(private fb:FormBuilder, private prof:ProfileService){}
+ constructor(private fb:FormBuilder, private prof:ProfileService,private router:Router){}
 
   ngOnInit(){
     this.DoctorprofileForm = this.fb.group({
@@ -80,11 +81,13 @@ image!:String;
  }
 
  editProfile(){
-  alert('hiiii')
   const formData = this.is_doctor ? this.DoctorprofileForm.value : this.ProfileForm.value;
   this.prof.editProfile(formData).subscribe(
     (response)=>{
       console.log('profile updated successfuly',response);
+      this.router.navigate(['/profile']);
+
+      
     },
     (error)=>{
       console.log('Error updating',error);
