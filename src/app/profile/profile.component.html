@@ -83,31 +83,37 @@
     <div class="side-nav">
       <div class="nav flex-column nav-pills align-self-stretch" id="v-pills-tab" role="tablist"
         aria-orientation="vertical">
-        <button class="nav-link d-flex align-items-center justify-content-between active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home"
-          type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">
+        <button class="nav-link d-flex align-items-center justify-content-between active" id="v-pills-home-tab"
+          data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
+          aria-selected="true">
           <i class="bi bi-person-circle"></i>
           <span>حساب کاربری</span>
         </button>
         <!-- <div class="d-flex align-items-center justify-content-between flex-row-reverse"> -->
-          <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-            <i class="bi bi-calendar2-check"></i>
-            <span>نوبت ها</span>
-          </button>
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-profile-tab"
+          data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab"
+          aria-controls="v-pills-profile" aria-selected="false">
+          <i class="bi bi-calendar2-check"></i>
+          <span>نوبت ها</span>
+        </button>
         <!-- </div> -->
-        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#v-pills-disabled"
-          type="button" role="tab" aria-controls="v-pills-disabled" aria-selected="false">
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-disabled-tab"
+          data-bs-toggle="pill" data-bs-target="#v-pills-disabled" type="button" role="tab"
+          aria-controls="v-pills-disabled" aria-selected="false">
           <i class="bi bi-x-circle"></i>
           <span>آدرس</span>
         </button>
-        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages"
-          type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-messages-tab"
+          data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab"
+          aria-controls="v-pills-messages" aria-selected="false">
           <i class="bi bi-chat-left-text"></i>
           <span>روزهای حضور</span>
         </button>
-        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings"
-          type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+        <button class="nav-link d-flex align-items-center justify-content-between" id="v-pills-settings-tab"
+          data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab"
+          aria-controls="v-pills-settings" aria-selected="false">
           <i class="bi bi-gear"></i>
-         <span> تنظیمات</span>
+          <span> تنظیمات</span>
         </button>
       </div>
     </div>
@@ -144,40 +150,80 @@
 
         <!-- Doctor Profile -->
         <div class="" *ngIf="is_doctor" style="direction: rtl;">
-          <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
+         
           <div class="d-flex">
             <img alt="Doctor Image" width="190px" height="180px" class="rounded-circle me-4" [src]="image">
-            <form [formGroup]="DoctorprofileForm" class="w-75">
-              <div class="mb-3">
-                <label for="first_name_doctor" class="form-label">نام</label>
-                <input class="form-control" readonly id="first_name_doctor" type="text" formControlName="first_name">
+
+              <div  class="w-75">
+                 
+                <form [formGroup]="DoctorprofileForm" class="w-75">
+                  <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
+                  <div class="mb-3">
+                    <label for="first_name_doctor" class="form-label">نام</label>
+                    <input class="form-control" readonly id="first_name_doctor" type="text" formControlName="first_name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="last_name_doctor" class="form-label">نام خانوادگی</label>
+                    <input class="form-control" readonly id="last_name_doctor" type="text" formControlName="last_name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="birthday_doctor" class="form-label">تاریخ تولد</label>
+                    <input class="form-control text-end" readonly id="birthday_doctor" type="date"
+                      formControlName="birthday">
+                  </div>
+                  <div class="mb-3">
+                    <label for="landline_phone" class="form-label">شماره مطب</label>
+                    <input class="form-control" readonly id="landline_phone" type="text" formControlName="landline_phone">
+                  </div>
+                  <div class="mb-3">
+                    <label for="medical_license_number" class="form-label">شماره نظام پزشکی</label>
+                    <input class="form-control" readonly id="medical_license_number" type="text"
+                      formControlName="medical_license_number">
+                  </div>
+                  <div class="mb-3">
+                    <label for="bio" class="form-label">بیوگرافی</label>
+                    <textarea class="form-control" readonly id="bio" formControlName="bio"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    type="submit" class="btn btn-success">ویرایش</button>
+                </form>  
+
+                <form [formGroup]="WorkingHoursForm" class="w-75 mt-4">
+                  <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5>
+                  
+                  <div formArrayName="workSchedule">
+                    <div class="d-flex align-items-center gap-2 mt-3" *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
+                      
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="day-{{i}}" type="text" formControlName="day">
+                      </div>
+                
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="start_time-{{i}}" type="text" formControlName="start_time">
+                      </div>
+                
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="end_time-{{i}}" type="text" formControlName="end_time">
+                      </div>
+                
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#"
+                    type="submit" class="btn btn-primary">ویرایش</button>
+                  </div>
+                </form>
+                
               </div>
-              <div class="mb-3">
-                <label for="last_name_doctor" class="form-label">نام خانوادگی</label>
-                <input class="form-control" readonly id="last_name_doctor" type="text" formControlName="last_name">
-              </div>
-              <div class="mb-3">
-                <label for="birthday_doctor" class="form-label">تاریخ تولد</label>
-                <input class="form-control text-end" readonly id="birthday_doctor" type="date"
-                  formControlName="birthday">
-              </div>
-              <div class="mb-3">
-                <label for="landline_phone" class="form-label">شماره مطب</label>
-                <input class="form-control" readonly id="landline_phone" type="text" formControlName="landline_phone">
-              </div>
-              <div class="mb-3">
-                <label for="medical_license_number" class="form-label">شماره نظام پزشکی</label>
-                <input class="form-control" readonly id="medical_license_number" type="text"
-                  formControlName="medical_license_number">
-              </div>
-              <div class="mb-3">
-                <label for="bio" class="form-label">بیوگرافی</label>
-                <textarea class="form-control" readonly id="bio" formControlName="bio"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                type="submit" class="btn btn-success">ویرایش</button>
-            </form>
+
+
+                          
+               
+          
           </div>
+
+        
+          <br>
+          
+
         </div>
       </div>
 
