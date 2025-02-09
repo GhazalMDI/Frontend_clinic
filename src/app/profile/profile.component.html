@@ -211,6 +211,31 @@
                     type="submit" class="btn btn-primary">ویرایش</button>
                   </div>
                 </form>
+
+                  <form [formGroup]="EducationForm" class="w-75 mt-4"> 
+                  <h5 class="fw-bold">تحصیلات</h5>
+                  <div formArrayName="doctorEducation">
+                    <div class="d-flex align-items-center gap-2 mt-3" *ngFor="let edu of education_array.controls; let e = index" [formGroupName]="e">
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="field-{{e}}" type="text" formControlName="field">
+                      </div>
+                
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="country-{{e}}" type="text" formControlName="country">
+                      </div>
+                
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="university-{{e}}" type="text" formControlName="university">
+                      </div>
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="graduation_year-{{e}}" type="text" formControlName="graduation_year">
+                      </div>
+                
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#"
+                    type="submit" class="btn btn-primary">ویرایش</button>
+                  </div> 
+                </form>
                 
               </div>
 

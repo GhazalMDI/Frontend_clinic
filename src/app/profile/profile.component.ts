@@ -16,6 +16,7 @@ export class ProfileComponent {
   DoctorprofileForm!: FormGroup
   ProfileForm!: FormGroup
   WorkingHoursForm!:FormGroup
+  EducationForm!:FormGroup
   is_doctor: Boolean = true;
   image!: String;
   toastMessage!: { message: string; type: 'success' | 'error' };
@@ -50,6 +51,10 @@ export class ProfileComponent {
     this.WorkingHoursForm = this.fb.group({
       workSchedule: this.fb.array([]) // آرایه‌ای برای روزهای کاری
     });
+
+    this.EducationForm = this.fb.group({
+      doctorEducation:this.fb.array([])
+    })
   
 
 
@@ -76,7 +81,9 @@ export class ProfileComponent {
         console.log(response.data.work_hours)
         const userData = response.data.user;
         const work_hours = response.data.work_hours;
-        console.log(work_hours)
+        const educ = response.data.education;
+        console.log(educ)
+
         if (response.data.status_doctor == true) {
           this.is_doctor = true
           this.DoctorprofileForm.patchValue({
@@ -90,6 +97,19 @@ export class ProfileComponent {
           })
           this.image = userData.image
 
+          if (educ.length>0){
+            const education_array = this.EducationForm.get('doctorEducation') as FormArray;
+            educ.forEach((e:any)=>{
+              education_array.push(this.fb.group({
+                field : new FormControl(e.academic_field['name']),
+                country : new FormControl(e.country),
+                university : new FormControl(e.university),
+                graduation_year : new FormControl(e.graduation_year)
+              }))
+            })
+          }
+
+
           if (work_hours.length > 0) {
             const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;
             // workScheduleArray.clear(); // پاک کردن داده‌های قبلی
@@ -101,12 +121,6 @@ export class ProfileComponent {
                 end_time: new FormControl(wh.end_time)
               }));
             });
-
-          // this.WorkingHoursForm.patchValue({
-          //   day: dayText,
-          //   start_time:workSchedule.start_time,
-          //   end_time:workSchedule.end_time
-          // })
         }
       }
         else if (response.data.status_doctor == false) {
@@ -132,6 +146,10 @@ export class ProfileComponent {
 
   get workScheduleArray(): FormArray {
     return this.WorkingHoursForm.get('workSchedule') as FormArray;
+  }
+
+  get education_array():FormArray{
+    return this.EducationForm.get('doctorEducation') as FormArray
   }
 
   editProfile() {
