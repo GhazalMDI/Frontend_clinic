@@ -17,6 +17,7 @@ export class ProfileComponent {
   ProfileForm!: FormGroup
   WorkingHoursForm!:FormGroup
   EducationForm!:FormGroup
+  CertificationForm!:FormGroup
   is_doctor: Boolean = true;
   image!: String;
   toastMessage!: { message: string; type: 'success' | 'error' };
@@ -56,6 +57,9 @@ export class ProfileComponent {
       doctorEducation:this.fb.array([])
     })
   
+    this.CertificationForm = this.fb.group({
+      doctorCertification:this.fb.array([])
+    })
 
 
     this.ProfileForm = this.fb.group({
@@ -82,6 +86,8 @@ export class ProfileComponent {
         const userData = response.data.user;
         const work_hours = response.data.work_hours;
         const educ = response.data.education;
+        const certi = response.data.certificates;
+
         console.log(educ)
 
         if (response.data.status_doctor == true) {
@@ -96,6 +102,19 @@ export class ProfileComponent {
             medical_license_number: userData.medical_license_number
           })
           this.image = userData.image
+
+          if (certi.length>0){
+            const certi_array = this.CertificationForm.get('doctorCertification') as FormArray;
+            certi.forEach((e:any)=>{
+              certi_array.push(this.fb.group({
+                certificate_name :  new FormControl(e.certificate_name),
+                issuing_institution : new FormControl(e.issuing_institution),
+                date_issue : new FormControl(e.date_issue),
+                expiration_date : new FormControl(e.expiration_date),
+                additional_details : new FormControl(e.additional_details)
+              }))
+            })
+          }
 
           if (educ.length>0){
             const education_array = this.EducationForm.get('doctorEducation') as FormArray;
@@ -150,6 +169,10 @@ export class ProfileComponent {
 
   get education_array():FormArray{
     return this.EducationForm.get('doctorEducation') as FormArray
+  }
+
+  get certi_array():FormArray{
+    return this.CertificationForm.get('doctorCertification') as FormArray
   }
 
   editProfile() {
