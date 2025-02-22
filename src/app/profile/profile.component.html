@@ -70,6 +70,53 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="workhoursModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">ویرایش ساعات کاری</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="WorkingHoursForm" class="mt-4">
+          <!-- <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5> -->
+          
+          <div formArrayName="workSchedule">
+            <div class="d-flex align-items-center justify-content-between p-2 mt-3" *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
+              
+              <div class="mb-3">
+                <input class="form-control"  id="day-{{i}}" type="text" formControlName="day">
+              </div>
+        
+              <div class="mb-3">
+                <input class="form-control"  id="start_time-{{i}}" type="text" formControlName="start_time">
+              </div>
+        
+              <div class="mb-3">
+                <input class="form-control"  id="end_time-{{i}}" type="text" formControlName="end_time">
+              </div>
+
+              <button class="btn btn-danger mb-3" (click)="removeSchedule(i, schedule.value.id)">
+                حذف
+              </button>
+        
+            </div>
+            <button class="btn btn-success">افزودن</button>
+
+            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#workhoursModal"
+            type="submit" class="btn btn-primary">ثبت</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div *ngIf="isToastVisible"
   [ngClass]="{'toast-success': toastMessage?.type === 'success', 'toast-error': toastMessage?.type === 'error'}"
   class="toast-notification">
@@ -207,7 +254,7 @@
                       </div>
                 
                     </div>
-                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#"
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#workhoursModal"
                     type="submit" class="btn btn-primary">ویرایش</button>
                   </div>
                 </form>

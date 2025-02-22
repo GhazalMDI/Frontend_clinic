@@ -175,6 +175,20 @@ export class ProfileComponent {
     return this.CertificationForm.get('doctorCertification') as FormArray
   }
 
+
+  removeSchedule(index: number, id?: number): void {
+    if (id) {
+      console.log(id)
+      this.prof.deleteWorkingHour(id).subscribe(() => {
+        this.workScheduleArray.removeAt(index);
+      }, error => {
+        alert('خطا در حذف رکورد');
+      });
+    } else {
+      this.workScheduleArray.removeAt(index);
+    }
+  }
+
   editProfile() {
     const formData = this.is_doctor ? this.DoctorprofileForm.value : this.ProfileForm.value;
     this.prof.editProfile(formData).subscribe(

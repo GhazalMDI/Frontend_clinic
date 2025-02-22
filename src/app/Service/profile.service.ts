@@ -30,5 +30,10 @@ export class ProfileService {
     });
     return this.http.patch(url,data,{headers})
   }
+
+  deleteWorkingHour(id: number): Observable<any> {
+    const  url = 'http://127.0.0.1:8000/API/Accounts/profile/'
+    return this.http.delete(`${url}?working_hour_id=${id}`);
+  }
 }
 
