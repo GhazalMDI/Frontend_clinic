@@ -32,8 +32,12 @@ export class ProfileService {
   }
 
   deleteWorkingHour(id: number): Observable<any> {
+    let accessToken = this.authService.getAccessToken()
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`
+    });
     const  url = 'http://127.0.0.1:8000/API/Accounts/profile/'
-    return this.http.delete(`${url}?working_hour_id=${id}`);
+    return this.http.delete(`${url}?working_hour_id=${id}`,{headers});
   }
 }
 

@@ -4,6 +4,7 @@ import { response } from 'express';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { error } from 'console';
 import { Router } from '@angular/router';
+import { window } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -81,14 +82,14 @@ export class ProfileComponent {
 
 
       (response) => {
-        console.log(response.data)
-        console.log(response.data.work_hours)
+        // console.log(response.data)
+        // console.log(response.data.work_hours)
         const userData = response.data.user;
         const work_hours = response.data.work_hours;
         const educ = response.data.education;
         const certi = response.data.certificates;
 
-        console.log(educ)
+        console.log(work_hours)
 
         if (response.data.status_doctor == true) {
           this.is_doctor = true
@@ -130,11 +131,10 @@ export class ProfileComponent {
 
 
           if (work_hours.length > 0) {
-            const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;
-            // workScheduleArray.clear(); // پاک کردن داده‌های قبلی
-      
+            const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;      
             work_hours.forEach((wh:any) => {
               workScheduleArray.push(this.fb.group({
+                id: new FormControl(wh.id),
                 day: new FormControl(this.DAYS_MAP[wh.day] || "نامشخص"),
                 start_time: new FormControl(wh.start_time),
                 end_time: new FormControl(wh.end_time)
@@ -176,18 +176,72 @@ export class ProfileComponent {
   }
 
 
-  removeSchedule(index: number, id?: number): void {
-    if (id) {
-      console.log(id)
+  // removeSchedule(index:number) {
+
+
+
+
+    // const schedule = this.workScheduleArray.at(index);
+    // const id = schedule.value.id;
+
+    // console.log('workScheduleArray:', this.workScheduleArray);
+    // console.log('index:', index);
+
+
+    // console.log(schedule)
+    // console.log(id)
+
+
+    // console.log(id)
+    // if (id) {
+    //   console.log(id)
+    //   this.prof.deleteWorkingHour(id).subscribe(() => {
+    //     this.workScheduleArray.removeAt(id);
+    //   }, error => {
+    //     alert('خطا در حذف رکورد');
+    //   });
+    // } else {
+    //   console.log('else')
+    //   this.workScheduleArray.removeAt(id);
+    // }
+  // }
+
+  removeSchedule(index: number) {
+    console.log('Current workScheduleArray:', this.workScheduleArray.value);
+    console.log('Trying to remove index:', index);
+  
+    if (!this.workScheduleArray || index < 0 || index >= this.workScheduleArray.length) {
+      console.error('Invalid index:', index);
+      return;
+    }
+  
+    const schedule = this.workScheduleArray.at(index);
+    if (!schedule) {
+      console.error('Schedule not found at index:', index);
+      return;
+    }
+  
+    const id = schedule.value?.id; // بررسی مقدار id
+    console.log('Schedule to be deleted:', schedule.value);
+  
+    if (id !== undefined && id !== null) {
+      console.log('Deleting record with ID:', id);
       this.prof.deleteWorkingHour(id).subscribe(() => {
         this.workScheduleArray.removeAt(index);
+        // if (this.workSchedule.length == 0){
+          
+            
+        // }
+
       }, error => {
         alert('خطا در حذف رکورد');
       });
     } else {
+      console.log('Removing unsaved record at index:', index);
       this.workScheduleArray.removeAt(index);
     }
   }
+  
 
   editProfile() {
     const formData = this.is_doctor ? this.DoctorprofileForm.value : this.ProfileForm.value;
@@ -210,7 +264,7 @@ export class ProfileComponent {
     if (type == "success") {
       setTimeout(() => {
         this.isToastVisible = false; // حذف پیام بعد از 5 ثانیه
-        window.location.reload();
+        // window.location.reload();
       }, 3000);
     }
 
