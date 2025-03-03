@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ProfileService } from '../Service/profile.service';
 import { response } from 'express';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { error } from 'console';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Console, error } from 'console';
 import { Router } from '@angular/router';
 import { window } from 'rxjs';
 
@@ -19,11 +19,13 @@ export class ProfileComponent {
   WorkingHoursForm!:FormGroup
   EducationForm!:FormGroup
   CertificationForm!:FormGroup
+  modalWorkScheduleArray!: any[] 
   is_doctor: Boolean = true;
   image!: String;
   toastMessage!: { message: string; type: 'success' | 'error' };
   isToastVisible!: boolean;
   workSchedule !: []
+  empty_hours:boolean= false
 
   DAYS_MAP: { [key: string]: string } = {
     "5": "شنبه",
@@ -40,7 +42,14 @@ export class ProfileComponent {
 
   constructor(private fb: FormBuilder, private prof: ProfileService, private router: Router) { }
 
+
+
   ngOnInit() {
+
+
+
+
+
     this.DoctorprofileForm = this.fb.group({
       first_name: [''],
       last_name: [''],
@@ -51,8 +60,10 @@ export class ProfileComponent {
       medical_license_number: ['']
     })
     this.WorkingHoursForm = this.fb.group({
-      workSchedule: this.fb.array([]) // آرایه‌ای برای روزهای کاری
+      workSchedule: this.fb.array([]) // باید مقدار اولیه داده شود
     });
+
+    this.addWorkSchedule();
 
     this.EducationForm = this.fb.group({
       doctorEducation:this.fb.array([])
@@ -72,18 +83,17 @@ export class ProfileComponent {
     this.showProfile();
   }
 
+
+  openModal() {
+    this.modalWorkScheduleArray = JSON.parse(JSON.stringify(this.workScheduleArray));
+  }
+
   showProfile() {
 
 
    
     this.prof.GetProfileData().subscribe(
-
-      
-
-
       (response) => {
-        // console.log(response.data)
-        // console.log(response.data.work_hours)
         const userData = response.data.user;
         const work_hours = response.data.work_hours;
         const educ = response.data.education;
@@ -131,7 +141,8 @@ export class ProfileComponent {
 
 
           if (work_hours.length > 0) {
-            const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;      
+            const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray; 
+
             work_hours.forEach((wh:any) => {
               workScheduleArray.push(this.fb.group({
                 id: new FormControl(wh.id),
@@ -139,7 +150,12 @@ export class ProfileComponent {
                 start_time: new FormControl(wh.start_time),
                 end_time: new FormControl(wh.end_time)
               }));
+              
+
+
             });
+
+
         }
       }
         else if (response.data.status_doctor == false) {
@@ -176,36 +192,6 @@ export class ProfileComponent {
   }
 
 
-  // removeSchedule(index:number) {
-
-
-
-
-    // const schedule = this.workScheduleArray.at(index);
-    // const id = schedule.value.id;
-
-    // console.log('workScheduleArray:', this.workScheduleArray);
-    // console.log('index:', index);
-
-
-    // console.log(schedule)
-    // console.log(id)
-
-
-    // console.log(id)
-    // if (id) {
-    //   console.log(id)
-    //   this.prof.deleteWorkingHour(id).subscribe(() => {
-    //     this.workScheduleArray.removeAt(id);
-    //   }, error => {
-    //     alert('خطا در حذف رکورد');
-    //   });
-    // } else {
-    //   console.log('else')
-    //   this.workScheduleArray.removeAt(id);
-    // }
-  // }
-
   removeSchedule(index: number) {
     console.log('Current workScheduleArray:', this.workScheduleArray.value);
     console.log('Trying to remove index:', index);
@@ -223,15 +209,13 @@ export class ProfileComponent {
   
     const id = schedule.value?.id; // بررسی مقدار id
     console.log('Schedule to be deleted:', schedule.value);
-  
     if (id !== undefined && id !== null) {
       console.log('Deleting record with ID:', id);
       this.prof.deleteWorkingHour(id).subscribe(() => {
         this.workScheduleArray.removeAt(index);
-        // if (this.workSchedule.length == 0){
-          
-            
-        // }
+        if (this.workScheduleArray.length < 0){
+          this.empty_hours = true;
+        }
 
       }, error => {
         alert('خطا در حذف رکورد');
@@ -276,5 +260,126 @@ export class ProfileComponent {
     }
 
   }
+  submitWokingForm(){
+    if (this.WorkingHoursForm.valid) {
+      console.log(this.WorkingHoursForm.value.workSchedule)
+      const payload = {
+        work_hours: this.WorkingHoursForm.value.workSchedule
+      };
 
+      
+      // console.log(payload)
+      // console.log("🔍 داده‌های ارسالی به بک‌اند:", JSON.stringify(payload, null, 2));
+
+
+
+      this.prof.createWorkingHour(payload).subscribe(
+        response => {
+          console.log('داده‌ها با موفقیت ارسال شدند', response);
+        },
+        error => {
+          console.error('خطا در ارسال داده‌ها', error);
+        }
+      );
+    } else {
+      console.error('فرم نامعتبر است');
+    }
+  }
+
+  addWorkSchedule(){
+    const newWorkSchedule = this.fb.group({
+      day: ['', Validators.required],
+      start_time: ['', Validators.required],
+      end_time: ['', Validators.required]
+    });
+  
+    this.workScheduleArray.push(newWorkSchedule);
+  }
+
+  workHour = {
+    day: '',
+    start_time: '',
+    end_time: ''
+  };
+
+
+  onSubmit(){
+    console.log(this.workHour)
+
+    this.prof.createWorkingHour(this.workHour)
+      .subscribe(
+        (response) => {
+          console.log('داده‌ها با موفقیت ارسال شدند:', response);
+          alert('داده‌ها با موفقیت ارسال شدند');
+        },
+        (error) => {
+          console.error('خطا در ارسال داده‌ها:', error);
+          alert('خطا در ارسال داده‌ها');
+        }
+      );
+  }
+
+  onSubmit1(){
+    // const workScheduleData = this.WorkingHoursForm.get('workSchedule').value;
+    // const newEntries = workScheduleData.filter(item => !item.id);
+    // const formData = this.WorkingHoursForm.value;
+    const formData: { workSchedule: { id?: number }[] } = this.WorkingHoursForm.value;
+    console.log(formData)
+
+    const newSchedules = formData.workSchedule.filter(schedule => !schedule.id); // فیلتر داده‌های بدون id
+    console.log(newSchedules)
+
+
+    // if (this.WorkingHoursForm.invalid) {
+    //   alert('لطفاً تمام فیلدها را پر کنید!');
+    //   return;
+    // }
+    this.prof.createWorkingHour(newSchedules).subscribe(
+      (response) => {
+        console.log('داده‌ها ارسال شدند:', response);
+        alert('ساعات کاری با موفقیت ثبت شدند');
+        // this.WorkingHoursForm.reset();  // فرم را پاک کن
+        // this.workScheduleArray.clear(); // لیست را خالی کن
+        this.addWorkSchedule();  // یک ورودی جدید ایجاد کن
+      },
+      (error) => {
+        console.error('خطا در ارسال داده‌ها:', error);
+        alert('خطایی رخ داد');
+      }
+    );
+  }
+
+
+  workSchedules1: any[] = [{ day: '', start_time: '', end_time: '' }]; // شروع با یک سطر
+  addRow() {
+    this.workSchedules1.push({ day: '', start_time: '', end_time: '' });
+  }
+
+  submitAll() {
+    // if (this.workSchedules1.some(schedule => !schedule.day || !schedule.start_time || !schedule.end_time)) {
+    //   alert('لطفاً تمام فیلدها را پر کنید.');
+    //   return;
+    // }
+    console.log(this.workSchedules1)
+    this.prof.createWorkingHour(this.workSchedules1).subscribe(
+      response => {
+        console.log('داده‌ها ارسال شد:', response);
+        alert('ساعات کاری با موفقیت ثبت شدند.');
+        this.workSchedules1 = [{ day: '', start_time: '', end_time: '' }]; // پاک کردن فرم بعد از ثبت
+      },
+      error => {
+        console.error('خطا در ارسال داده‌ها:', error);
+        alert('خطایی رخ داده است.');
+      }
+    );
+  }
 }
+
+
+
+
+    
+
+
+    
+

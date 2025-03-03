@@ -39,5 +39,17 @@ export class ProfileService {
     const  url = 'http://127.0.0.1:8000/API/Accounts/profile/'
     return this.http.delete(`${url}?working_hour_id=${id}`,{headers});
   }
+
+  createWorkingHour(data: any): Observable<any>{
+    const  url = 'http://127.0.0.1:8000/API/Accounts/profile/'
+
+    let accessToken = this.authService.getAccessToken()
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}` // اگر نیاز به احراز هویت دارید
+    });
+
+    return this.http.post(`${url}`, data, { headers });
+  }
 }
 

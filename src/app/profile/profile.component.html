@@ -79,10 +79,77 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="WorkingHoursForm" class="mt-4">
-          <!-- <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5> -->
-          
-          <div formArrayName="workSchedule">
+
+        <!-- <form [formGroup]="WorkingHoursForm" class="mt-4" (ngSubmit)="onSubmit1()">
+          <div formArrayName="workSchedule" class="form-group">
+            <div *ngFor="let schedule of workScheduleArray.controls; let i = index"
+              class="d-flex align-items-center justify-content-between p-2 mt-3" [formGroupName]="i">
+
+              <div class="mb-3">
+                <input class="form-control" placeholder="روز" formControlName="day">
+              </div>
+
+              <div class="mb-3">
+                <input class="form-control" placeholder="ساعت شروع" formControlName="start_time">
+              </div>
+
+              <div class="mb-3">
+                <input class="form-control" placeholder="ساعت پایان" formControlName="end_time">
+              </div>
+
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-success mt-2" (click)="addWorkSchedule()">افزودن</button>
+
+          <button type="submit" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#workhoursModal">
+            ثبت
+          </button>
+        </form> -->
+
+
+        <form [formGroup]="WorkingHoursForm" class="mt-4" (ngSubmit)="onSubmit1()">
+          <div formArrayName="workSchedule" class="form-group">
+            <div *ngFor="let schedule of workScheduleArray.controls; let i = index"
+              class="d-flex align-items-center justify-content-between p-2 mt-3"
+              [formGroupName]="i">
+              
+              <!-- فیلد روز -->
+              <div class="mb-3">
+                <input type="text" class="form-control" placeholder="روز" formControlName="day" required>
+              </div>
+        
+              <!-- فیلد ساعت شروع -->
+              <div class="mb-3">
+                <input type="text" class="form-control" placeholder="ساعت شروع" formControlName="start_time" required>
+              </div>
+        
+              <!-- فیلد ساعت پایان -->
+              <div class="mb-3">
+                <input type="" class="form-control" placeholder="ساعت پایان" formControlName="end_time" required>
+              </div>
+        
+              <!-- دکمه حذف بازه -->
+            </div>
+          </div>
+        
+          <!-- دکمه افزودن بازه جدید -->
+          <button type="button" class="btn btn-success mt-2" (click)="addWorkSchedule()">افزودن بازه</button>
+        
+          <!-- دکمه ارسال -->
+          <button type="submit" class="btn btn-primary mt-2">
+            ثبت ساعات کاری
+          </button>
+        </form>
+        
+
+
+      
+
+        
+        <!-- <form *ngIf="empty_hours" [formGroup]="WorkingHoursForm" class="mt-4">
+           <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5> 
+          <div  formArrayName="workSchedule">
             <div class="d-flex align-items-center justify-content-between p-2 mt-3" *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
               
               <div class="mb-3">
@@ -96,18 +163,42 @@
               <div class="mb-3">
                 <input class="form-control"  id="end_time-{{i}}" type="text" formControlName="end_time">
               </div>
-
-              <button class="btn btn-danger mb-3"  (click)="removeSchedule(i)">
-                حذف
-              </button>
-        
             </div>
             <button class="btn btn-success">افزودن</button>
 
             <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#workhoursModal"
             type="submit" class="btn btn-primary">ثبت</button>
           </div>
-        </form>
+        </form> -->
+
+
+        <!-- <form class="mt-4">
+          <div  formArrayName="workSchedule">
+            <div class="d-flex align-items-center justify-content-between p-2 mt-3">
+              
+              <div class="mb-3">
+                <input class="form-control" placeholder="روز"  name="day">
+              </div>
+        
+              <div class="mb-3">
+                <input class="form-control" placeholder="ساعت شروع"  name="start_time">
+              </div>
+        
+              <div class="mb-3">
+                <input class="form-control" placeholder="ساعت پایان" type="text" name="end_time">
+              </div>
+            </div>
+            <button class="btn btn-success">افزودن</button>
+
+            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#workhoursModal"
+            type="submit" class="btn btn-primary">ثبت</button>
+          </div>
+        </form> -->
+
+
+
+
+
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
@@ -197,147 +288,235 @@
 
         <!-- Doctor Profile -->
         <div class="" *ngIf="is_doctor" style="direction: rtl;">
-         
+
           <div class="d-flex">
             <img alt="Doctor Image" width="190px" height="180px" class="rounded-circle me-4" [src]="image">
 
-              <div  class="w-75">
-                 
-                <form [formGroup]="DoctorprofileForm" class="w-75">
-                  <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
-                  <div class="mb-3">
-                    <label for="first_name_doctor" class="form-label">نام</label>
-                    <input class="form-control" readonly id="first_name_doctor" type="text" formControlName="first_name">
-                  </div>
-                  <div class="mb-3">
-                    <label for="last_name_doctor" class="form-label">نام خانوادگی</label>
-                    <input class="form-control" readonly id="last_name_doctor" type="text" formControlName="last_name">
-                  </div>
-                  <div class="mb-3">
-                    <label for="birthday_doctor" class="form-label">تاریخ تولد</label>
-                    <input class="form-control text-end" readonly id="birthday_doctor" type="date"
-                      formControlName="birthday">
-                  </div>
-                  <div class="mb-3">
-                    <label for="landline_phone" class="form-label">شماره مطب</label>
-                    <input class="form-control" readonly id="landline_phone" type="text" formControlName="landline_phone">
-                  </div>
-                  <div class="mb-3">
-                    <label for="medical_license_number" class="form-label">شماره نظام پزشکی</label>
-                    <input class="form-control" readonly id="medical_license_number" type="text"
-                      formControlName="medical_license_number">
-                  </div>
-                  <div class="mb-3">
-                    <label for="bio" class="form-label">بیوگرافی</label>
-                    <textarea class="form-control" readonly id="bio" formControlName="bio"></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                    type="submit" class="btn btn-success">ویرایش</button>
-                </form>  
+            <div class="w-75">
 
-                <form [formGroup]="WorkingHoursForm" class="w-75 mt-4">
-                  <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5>
-                  
-                  <div formArrayName="workSchedule">
-                    <div class="d-flex align-items-center gap-2 mt-3" *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
-                      
-                      <div class="mb-3">
-                        <input class="form-control" readonly id="day-{{i}}" type="text" formControlName="day">
-                      </div>
-                
-                      <div class="mb-3">
-                        <input class="form-control" readonly id="start_time-{{i}}" type="text" formControlName="start_time">
-                      </div>
-                
-                      <div class="mb-3">
-                        <input class="form-control" readonly id="end_time-{{i}}" type="text" formControlName="end_time">
-                      </div>
-                
+              <form [formGroup]="DoctorprofileForm" class="w-75">
+                <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
+                <div class="mb-3">
+                  <label for="first_name_doctor" class="form-label">نام</label>
+                  <input class="form-control" readonly id="first_name_doctor" type="text" formControlName="first_name">
+                </div>
+                <div class="mb-3">
+                  <label for="last_name_doctor" class="form-label">نام خانوادگی</label>
+                  <input class="form-control" readonly id="last_name_doctor" type="text" formControlName="last_name">
+                </div>
+                <div class="mb-3">
+                  <label for="birthday_doctor" class="form-label">تاریخ تولد</label>
+                  <input class="form-control text-end" readonly id="birthday_doctor" type="date"
+                    formControlName="birthday">
+                </div>
+                <div class="mb-3">
+                  <label for="landline_phone" class="form-label">شماره مطب</label>
+                  <input class="form-control" readonly id="landline_phone" type="text" formControlName="landline_phone">
+                </div>
+                <div class="mb-3">
+                  <label for="medical_license_number" class="form-label">شماره نظام پزشکی</label>
+                  <input class="form-control" readonly id="medical_license_number" type="text"
+                    formControlName="medical_license_number">
+                </div>
+                <div class="mb-3">
+                  <label for="bio" class="form-label">بیوگرافی</label>
+                  <textarea class="form-control" readonly id="bio" formControlName="bio"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                  type="submit" class="btn btn-success">ویرایش</button>
+              </form>
+
+              <form [formGroup]="WorkingHoursForm" class="w-75 mt-4">
+                <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5>
+
+                <div formArrayName="workSchedule" *ngIf="!empty_hours">
+
+                  <div class="d-flex align-items-center gap-2 mt-3"
+                    *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
+
+                    <div class="mb-3">
+                      <input class="form-control" readonly id="day-{{i}}" type="text" formControlName="day">
                     </div>
-                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#workhoursModal"
-                    type="submit" class="btn btn-primary">ویرایش</button>
-                  </div>
-                </form>
 
-                  <form [formGroup]="EducationForm" class="w-75 mt-4"> 
-                  <h5 class="fw-bold">تحصیلات</h5>
-                  <div formArrayName="doctorEducation">
-                    <div class="d-flex flex-column align-items-center gap-2 mt-3" *ngFor="let edu of education_array.controls; let e = index" [formGroupName]="e">
-                     <div class=" d-flex align-items-center gap-2 mt-3">
+                    <div class="mb-3">
+                      <input class="form-control" readonly id="start_time-{{i}}" type="text"
+                        formControlName="start_time">
+                    </div>
+
+                    <div class="mb-3">
+                      <input class="form-control" readonly id="end_time-{{i}}" type="text" formControlName="end_time">
+                    </div>
+
+                    <button class="btn btn-danger mb-3" (click)="removeSchedule(i)">
+                      حذف
+                    </button>
+                  </div>
+
+                  <p class="fw-bold alert alert-danger" id="empty" *ngIf="empty_hours">هیچ برنامه ی حضوری برای شما تعریف
+                    نشده است.</p>
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#workhoursModal"
+                    type="submit" class="btn btn-primary" *ngIf="empty_hours">ویرایش</button>
+                  <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                    data-bs-target="#workhoursModal">افزودن</button>
+                </div>
+              </form>
+
+              <form [formGroup]="EducationForm" class="w-75 mt-4">
+                <h5 class="fw-bold">تحصیلات</h5>
+                <div formArrayName="doctorEducation">
+                  <div class="d-flex flex-column align-items-center gap-2 mt-3"
+                    *ngFor="let edu of education_array.controls; let e = index" [formGroupName]="e">
+                    <div class=" d-flex align-items-center gap-2 mt-3">
                       <div class="mb-3">
                         <input class="form-control" readonly id="field-{{e}}" type="text" formControlName="field">
                       </div>
                       <div class="mb-3">
                         <input class="form-control" readonly id="country-{{e}}" type="text" formControlName="country">
                       </div>
-                     </div>
-                     <div class="d-flex align-items-center gap-2 mt-3">
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mt-3">
                       <div class="mb-3 col-10">
-                        <input class="form-control" readonly id="university-{{e}}" type="text" formControlName="university">
+                        <input class="form-control" readonly id="university-{{e}}" type="text"
+                          formControlName="university">
                       </div>
 
                       <div class="mb-3">
-                        <input class="form-control" readonly id="graduation_year-{{e}}" type="text" formControlName="graduation_year">
+                        <input class="form-control" readonly id="graduation_year-{{e}}" type="text"
+                          formControlName="graduation_year">
                       </div>
-                     </div>
                     </div>
-                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#"
-                    type="submit" class="btn btn-primary">ویرایش</button>
-                  </div> 
-                </form>
+                  </div>
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#" type="submit"
+                    class="btn btn-primary">ویرایش</button>
+                </div>
+              </form>
 
 
-                <form [formGroup]="CertificationForm" class="w-75 mt-4"> 
-                  <h5 class="fw-bold">گواهینامه ها</h5>
-                  <div formArrayName="doctorCertification">
-                    <div class="d-flex flex-column align-items-start gap-2 mt-3" *ngFor="let certi of certi_array.controls; let c = index" [formGroupName]="c">
-                      <div class="d-flex gap-3 align-items-center">
-                        <div class="mb-3">
-                          <input class="form-control" readonly id="certificate_name-{{c}}" type="text" formControlName="certificate_name">
-                        </div>
-                        <div class="mb-3">
-                          <input class="form-control" readonly id="issuing_institution{{c}}" type="text" formControlName="issuing_institution">
-                        </div>
+              <form [formGroup]="CertificationForm" class="w-75 mt-4">
+                <h5 class="fw-bold">گواهینامه ها</h5>
+                <div formArrayName="doctorCertification">
+                  <div class="d-flex flex-column align-items-start gap-2 mt-3"
+                    *ngFor="let certi of certi_array.controls; let c = index" [formGroupName]="c">
+                    <div class="d-flex gap-3 align-items-center">
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="certificate_name-{{c}}" type="text"
+                          formControlName="certificate_name">
                       </div>
-                     
-                      <div class="d-flex gap-3 align-items-center">
-                        <div class="mb-3">
-                          <input class="form-control" readonly id="date_issue-{{c}}" type="text" formControlName="date_issue">
-                        </div>
-                        <div class="mb-3">
-                          <input class="form-control" readonly id="expiration_date-{{c}}" type="text" formControlName="expiration_date">
-                        </div>
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="issuing_institution{{c}}" type="text"
+                          formControlName="issuing_institution">
                       </div>
-                     
-
-                      <div class="mb-3 col-12">
-                        <input class="form-control" readonly id="additional_details-{{c}}" type="text" formControlName="additional_details">
-                      </div>
-                
                     </div>
-                    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#"
-                    type="submit" class="btn btn-primary">ویرایش</button>
-                  </div> 
-                </form>
-                
-              </div>
+
+                    <div class="d-flex gap-3 align-items-center">
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="date_issue-{{c}}" type="text"
+                          formControlName="date_issue">
+                      </div>
+                      <div class="mb-3">
+                        <input class="form-control" readonly id="expiration_date-{{c}}" type="text"
+                          formControlName="expiration_date">
+                      </div>
+                    </div>
 
 
-                          
-               
-          
+                    <div class="mb-3 col-12">
+                      <input class="form-control" readonly id="additional_details-{{c}}" type="text"
+                        formControlName="additional_details">
+                    </div>
+
+                  </div>
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#" type="submit"
+                    class="btn btn-primary">ویرایش</button>
+                </div>
+              </form>
+
+            </div>
+
+
+
+
+
           </div>
 
-        
+
           <br>
-          
+
 
         </div>
       </div>
 
       <!-- Other Tabs -->
       <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"
-        tabindex="0">...</div>
+        tabindex="0">
+        <!-- working-hours-form.component.html -->
+        <div class="container">
+          <h2>ثبت ساعات کاری</h2>
+       
+
+          <form (ngSubmit)="onSubmit()" #workingHoursForm="ngForm">
+            <div class="form-group">
+              <label for="day">روز:</label>
+              <input type="text" id="day" name="day" [(ngModel)]="workHour.day" class="form-control"
+                placeholder="مثلاً: شنبه" required />
+            </div>
+  
+            <div class="form-group">
+              <label for="start_time">ساعت شروع:</label>
+              <input type="text" id="start_time" name="start_time" [(ngModel)]="workHour.start_time"
+                class="form-control" required />
+            </div>
+  
+            <div class="form-group">
+              <label for="end_time">ساعت پایان:</label>
+              <input type="text" id="end_time" name="end_time" [(ngModel)]="workHour.end_time" class="form-control"
+                required />
+            </div>
+  
+            <button type="submit" class="btn btn-primary" >
+              ارسال
+            </button> 
+         </form>
+
+          <!-- نمایش پیام‌ها -->
+          <!-- <div *ngIf="message" class="alert" [ngClass]="{'alert-success': success, 'alert-danger': !success}">
+            {{ message }}
+          </div> -->
+
+          <form #workingHoursForm="ngForm">
+            <div *ngFor="let schedule of workSchedules1; let i = index" class="row mb-2">
+              <!-- فیلد روز -->
+              <div class="col">
+                <input type="text" class="form-control" placeholder="روز" [(ngModel)]="schedule.day" name="day{{i}}" required>
+              </div>
+          
+              <!-- فیلد ساعت شروع -->
+              <div class="col">
+                <input type="text" class="form-control" placeholder="ساعت شروع" [(ngModel)]="schedule.start_time" name="start_time{{i}}" required>
+              </div>
+          
+              <!-- فیلد ساعت پایان -->
+              <div class="col">
+                <input type="text" class="form-control" placeholder="ساعت پایان" [(ngModel)]="schedule.end_time" name="end_time{{i}}" required>
+              </div>
+          
+              <!-- دکمه حذف سطر -->
+              
+              
+            </div>
+          
+            <!-- دکمه افزودن سطر جدید -->
+            <button type="button" class="btn btn-success mt-2" (click)="addRow()">افزودن بازه</button>
+          
+            <!-- دکمه ثبت همه ساعات -->
+            <button type="button" class="btn btn-primary mt-2" (click)="submitAll()">ثبت همه</button>
+          </form>
+          
+
+
+        </div>
+
+      </div>
       <div class="tab-pane fade" id="v-pills-disabled" role="tabpanel" aria-labelledby="v-pills-disabled-tab"
         tabindex="0">...</div>
       <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab"
