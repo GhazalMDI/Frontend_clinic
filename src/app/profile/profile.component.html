@@ -105,6 +105,71 @@
   </div>
 </div>
 
+<div class="modal fade" id="EducationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">افزودن تحصیلات</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #workingHoursForm="ngForm">
+          <div *ngFor="let edu of educations1; let i = index" class="row mb-2">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="تخصص" [(ngModel)]="edu.academic_field" name="academic_field{{i}}"
+                required>
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="دانشگاه " [(ngModel)]="edu.university"
+                name="university{{i}}" required>
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="سال" [(ngModel)]="edu.graduation_year"
+                name="graduation_year{{i}}" required>
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" placeholder="کشور" [(ngModel)]="edu.country"
+                name="country{{i}}" required>
+            </div>
+
+          </div>
+          <button type="button" class="btn btn-success mt-2" (click)="addEducation()">افزودن بازه</button>
+          <button type="button" class="btn btn-primary mt-2" (click)="submitAll()">ثبت همه</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="ChangeImageModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">افزودن تحصیلات</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-container">
+          <img [src]="image" width="100px" alt="Profile Image" class="profile-img" (click)="fileInput.click()">
+          <input type="file" #fileInput (change)="onFileSelected($event)" >
+        </div>
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <div *ngIf="isToastVisible"
   [ngClass]="{'toast-success': toastMessage?.type === 'success', 'toast-error': toastMessage?.type === 'error'}"
@@ -179,7 +244,7 @@
               <label for="national_code" class="form-label">کد ملی</label>
               <input class="form-control" id="national_code" type="text" formControlName="national_code">
             </div>
-            <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            <button type="submit" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#exampleModal"
               type="submit" class="btn btn-success">ویرایش</button>
           </form>
         </div>
@@ -187,7 +252,7 @@
         <!-- Doctor Profile -->
         <div class="" *ngIf="is_doctor" style="direction: rtl;">
           <div class="d-flex">
-            <img alt="Doctor Image" width="190px" height="180px" class="rounded-circle me-4" [src]="image">
+            <img data-bs-toggle="modal" data-bs-target="#ChangeImageModal" alt="Doctor Image" width="190px"  height="180px" class="rounded-circle me-4" [src]="image">
             <div class="w-75">
               <form [formGroup]="DoctorprofileForm" class="w-75">
                 <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
@@ -225,14 +290,14 @@
                 <div formArrayName="workSchedule" *ngIf="!empty_hours">
                   <div class="d-flex align-items-center gap-2 mt-3" *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
                     <div class="mb-3">
-                      <input class="form-control" readonly id="day-{{i}}" type="text" formControlName="day">
+                      <input class="form-control" readonly *ngIf="waiting_delete" id="day-{{i}}" type="text" formControlName="day">
                     </div>
                     <div class="mb-3">
                       <input class="form-control" readonly id="start_time-{{i}}" type="text"
                         formControlName="start_time">
                     </div>
                     <div class="mb-3">
-                      <input class="form-control" readonly id="end_time-{{i}}" type="text" formControlName="end_time">
+                      <input class="form-control"  readonly id="end_time-{{i}}" type="text" formControlName="end_time">
                     </div>
                     <button class="btn btn-danger mb-3" (click)="removeSchedule(i)">
                       حذف
@@ -271,9 +336,17 @@
                           formControlName="graduation_year">
                       </div>
                     </div>
+                   <div class="d-flex align-items-center justify-content-between">
+                    <button class="btn btn-danger mb-3" >
+                      حذف
+                    </button>
+                    <button class="btn btn-success mb-3" >
+                      ویرایش
+                    </button>
+                   </div>
                   </div>
-                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#" type="submit"
-                    class="btn btn-primary">ویرایش</button>
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EducationModal" type="submit"
+                    class="btn btn-primary">افزودن</button>
                 </div>
               </form>
 

@@ -26,6 +26,7 @@ export class ProfileComponent {
   isToastVisible!: boolean;
   workSchedule !: []
   empty_hours: boolean = false
+  waiting_delete: boolean = false
 
   DAYS_MAP: { [key: string]: string } = {
     "5": "شنبه",
@@ -130,14 +131,25 @@ export class ProfileComponent {
 
           if (work_hours.length > 0) {
             const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;
-            console.log(workScheduleArray.length)
             work_hours.forEach((wh: any) => {
+              console.log(wh.delete_record)
+
               workScheduleArray.push(this.fb.group({
                 id: new FormControl(wh.id),
                 day: new FormControl(this.DAYS_MAP[wh.day] || "نامشخص"),
                 start_time: new FormControl(wh.start_time),
                 end_time: new FormControl(wh.end_time)
               }));
+
+
+              if (wh.delete_record === 'WAITING') {
+                this.waiting_delete = true;
+              }
+              else if (wh.delete_record === 'ACCEPTED' || wh.delete_record === 'NOT_ACCEPTED') {
+                this.waiting_delete = false;
+              }
+
+
             });
           }
         }
@@ -175,9 +187,6 @@ export class ProfileComponent {
   }
 
   removeSchedule(index: number) {
-    console.log('Current workScheduleArray:', this.workScheduleArray.value);
-    console.log('Trying to remove index:', index);
-
     if (!this.workScheduleArray || index < 0 || index >= this.workScheduleArray.length) {
       console.error('Invalid index:', index);
       return;
@@ -190,20 +199,16 @@ export class ProfileComponent {
     }
 
     const id = schedule.value?.id; // بررسی مقدار id
-    console.log('Schedule to be deleted:', schedule.value);
     if (id !== undefined && id !== null) {
-      console.log('Deleting record with ID:', id);
       this.prof.deleteWorkingHour(id).subscribe(() => {
         this.workScheduleArray.removeAt(index);
         if (this.workScheduleArray.length < 0) {
           this.empty_hours = true;
         }
-
       }, error => {
         alert('خطا در حذف رکورد');
       });
     } else {
-      console.log('Removing unsaved record at index:', index);
       this.workScheduleArray.removeAt(index);
     }
   }
@@ -246,6 +251,7 @@ export class ProfileComponent {
     if (this.WorkingHoursForm.valid) {
       console.log(this.WorkingHoursForm.value.workSchedule)
       const payload = {
+        type:'workSchedule',
         work_hours: this.WorkingHoursForm.value.workSchedule
       };
       this.prof.createWorkingHour(payload).subscribe(
@@ -301,6 +307,41 @@ export class ProfileComponent {
       }
     );
   }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('image', file); 
+  
+      this.prof.updateProfileImage(formData).subscribe({
+        next: (response) => {
+          console.log('تصویر با موفقیت آپلود شد', response);
+        },
+        error: (error) => {
+          console.error('خطا در آپلود تصویر', error);
+        }
+      });
+    }
+  }
+  
+  addEducation() {
+    const educationRow = this.fb.group({
+      academic_field: ['', Validators.required],
+      university: ['', Validators.required],
+      graduation_year: ['', Validators.required],
+      country: ['', Validators.required]
+    });
+
+    this.educations1.push(educationRow);
+  }
+
+  
+  educations1: any[] = [{ academic_field: '', university: '', graduation_year: '', country: '' }]; // شروع با یک سطر
+  addEducationRow() {
+    this.educations1.push({ academic_field: '', university: '', graduation_year: '', country: '' });
+  }
+  
 }
 
 

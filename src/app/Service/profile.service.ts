@@ -51,5 +51,17 @@ export class ProfileService {
 
     return this.http.post(`${url}`, data, { headers });
   }
+
+
+  updateProfileImage(data: FormData): Observable<any> {
+    const url = 'http://127.0.0.1:8000/API/Accounts/profile/';
+    let accessToken = this.authService.getAccessToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}` // احراز هویت
+    });
+  
+    return this.http.put(url, data, { headers });
+  }
+  
 }
 
