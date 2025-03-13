@@ -27,6 +27,8 @@ export class ProfileComponent {
   workSchedule !: []
   empty_hours: boolean = false
   waiting_delete: boolean = false
+  maxFileSize = 150 * 1024; // 150KB (حداکثر حجم مجاز برای آپلود)
+  maxUploadSize = 10 * 1024 * 1024; // 10MB (حداکثر حجم مجاز برای فشرده‌سازی)
 
   DAYS_MAP: { [key: string]: string } = {
     "5": "شنبه",
@@ -308,22 +310,8 @@ export class ProfileComponent {
     );
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('image', file); 
+
   
-      this.prof.updateProfileImage(formData).subscribe({
-        next: (response) => {
-          console.log('تصویر با موفقیت آپلود شد', response);
-        },
-        error: (error) => {
-          console.error('خطا در آپلود تصویر', error);
-        }
-      });
-    }
-  }
   
   addEducation() {
     const educationRow = this.fb.group({
@@ -341,6 +329,70 @@ export class ProfileComponent {
   addEducationRow() {
     this.educations1.push({ academic_field: '', university: '', graduation_year: '', country: '' });
   }
+// توابع مربوط به آپلود عکس
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0]; // دریافت فایل انتخاب‌شده توسط کاربر
+    console.log(file.size)
+    if (file) {
+      if (file.size > this.maxUploadSize) { // بررسی محدودیت حجم 10MB
+        alert('حجم فایل نباید بیشتر از 10MB باشد.');
+        return;
+      }
+  
+      // اگر فایل بزرگ‌تر از ۱۵۰KB باشد، فشرده‌سازی اجرا شود
+      if (file.size > this.maxFileSize) {
+        this.compressImage(file, 0.7, (compressedFile) => { // فشرده‌سازی تصویر
+          console.log(compressedFile.size)
+          this.uploadImage(compressedFile); // ارسال تصویر به سرور
+        });
+      } else {
+        console.log(file.size)
+        this.uploadImage(file); // ارسال فایل در صورت نداشتن نیاز به فشرده‌سازی
+      }
+    }
+  }
+  
+  // 📌 متد ارسال تصویر به سرور
+  uploadImage(file: File) {
+    const formData = new FormData();
+    formData.append('image', file); // اضافه کردن فایل فشرده‌شده یا اصلی به FormData
+  
+    this.prof.updateProfileImage(formData).subscribe({
+      next: (response) => {
+        console.log('تصویر با موفقیت آپلود شد', response);
+      },
+      error: (error) => {
+        console.error('خطا در آپلود تصویر', error);
+      }
+    });
+  }
+
+  compressImage(file:File,quality:number,callback:(compresFile:File)=>void){
+    const reader = new FileReader()
+    reader.readAsDataURL(file);
+    reader.onload = (event)=>{
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () =>{
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d');
+        const maxWidth = 800
+        const scaleSize = maxWidth / img.width
+        canvas.width = maxWidth
+        canvas.height = img.height * scaleSize;
+        ctx?.drawImage(img,0,0,canvas.width,canvas.height)
+        canvas.toBlob((blob)=>{
+          if(blob){
+            const compressedFile = new File([blob],file.name,{type:'image/jpeg',lastModified:Date.now()})
+            callback(compressedFile)
+          }
+        },'image/jpeg',quality)
+      }
+    }
+
+  }
+
   
 }
 
