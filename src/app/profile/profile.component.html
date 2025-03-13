@@ -154,9 +154,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="profile-container">
-          <img [src]="image" width="100px" alt="Profile Image" class="profile-img" (click)="fileInput.click()">
-          <input type="file" #fileInput (change)="onFileSelected($event)" >
+        <div class="profile-container d-flex align-items-center gap-2">
+          <img [src]="image" width="100px" height="100px" alt="Profile Image" class="profile-img rounded rounded-pill" (click)="fileInput.click()">
+          <input type="file" class="form-control" #fileInput (change)="onFileSelected($event)" >
         </div>
         
         

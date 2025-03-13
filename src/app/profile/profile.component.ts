@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ProfileService } from '../Service/profile.service';
 import { response } from 'express';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -43,7 +43,7 @@ export class ProfileComponent {
 
 
 
-  constructor(private fb: FormBuilder, private prof: ProfileService, private router: Router) { }
+  constructor(private fb: FormBuilder, private prof: ProfileService, private router: Router ,private cd: ChangeDetectorRef) { }
 
 
 
@@ -339,7 +339,6 @@ export class ProfileComponent {
         alert('حجم فایل نباید بیشتر از 10MB باشد.');
         return;
       }
-  
       // اگر فایل بزرگ‌تر از ۱۵۰KB باشد، فشرده‌سازی اجرا شود
       if (file.size > this.maxFileSize) {
         this.compressImage(file, 0.7, (compressedFile) => { // فشرده‌سازی تصویر
@@ -352,15 +351,15 @@ export class ProfileComponent {
       }
     }
   }
-  
-  // 📌 متد ارسال تصویر به سرور
-  uploadImage(file: File) {
+    uploadImage(file: File) {
     const formData = new FormData();
     formData.append('image', file); // اضافه کردن فایل فشرده‌شده یا اصلی به FormData
   
     this.prof.updateProfileImage(formData).subscribe({
       next: (response) => {
         console.log('تصویر با موفقیت آپلود شد', response);
+        this.image = response.data.image_url
+        this.cd.detectChanges();
       },
       error: (error) => {
         console.error('خطا در آپلود تصویر', error);
