@@ -115,23 +115,38 @@
       <div class="modal-body">
         <form #workingHoursForm="ngForm">
           <div *ngFor="let edu of educations1; let i = index" class="row mb-2">
-            <div class="col">
-              <input type="text" class="form-control" placeholder="تخصص" [(ngModel)]="edu.academic_field" name="academic_field{{i}}"
-                required>
-            </div>
-            <div class="col">
-              <input type="text" class="form-control" placeholder="دانشگاه " [(ngModel)]="edu.university"
-                name="university{{i}}" required>
-            </div>
-            <div class="col">
-              <input type="text" class="form-control" placeholder="سال" [(ngModel)]="edu.graduation_year"
-                name="graduation_year{{i}}" required>
-            </div>
-            <div class="col">
-              <input type="text" class="form-control" placeholder="کشور" [(ngModel)]="edu.country"
-                name="country{{i}}" required>
-            </div>
+            <div class="row">
+              <div class="col-6">
+                <select name="country" class="form-control" placeholder="کشور" [(ngModel)]="selectedCountry" id="country"
+                  (change)="onCountryChange()">
+                  <option *ngFor="let c of contries" [value]="c.display">
+                    {{ c.display }}</option>
+                </select>
+                <!-- <input type="text" class="form-control" placeholder="کشور" [(ngModel)]=""
+                name="country{{i}}" required> -->
+              </div>
+              <div class="col-6">
+                <select name="univercity" class="form-control" [(ngModel)]="edu.university" id="univercity">
+                  <option *ngFor="let u of filteredUniversities" [value]="u.name">
+                    {{u.name}}
+                  </option>
 
+                </select>
+                <!-- <input type="text" class="form-control" placeholder="دانشگاه " [(ngModel)]="edu.university"
+                name="university{{i}}" required> -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <input type="text" class="form-control" placeholder="سال" [(ngModel)]="edu.graduation_year"
+                  name="graduation_year{{i}}" required>
+              </div>
+
+              <div class="col-6">
+                <input type="text" class="form-control" placeholder="تخصص" [(ngModel)]="edu.academic_field"
+                  name="academic_field{{i}}" required>
+              </div>
+            </div>
           </div>
           <button type="button" class="btn btn-success mt-2" (click)="addEducation()">افزودن بازه</button>
           <button type="button" class="btn btn-primary mt-2" (click)="submitAll()">ثبت همه</button>
@@ -155,11 +170,12 @@
       </div>
       <div class="modal-body">
         <div class="profile-container d-flex align-items-center gap-2">
-          <img [src]="image" width="100px" height="100px" alt="Profile Image" class="profile-img rounded rounded-pill" (click)="fileInput.click()">
-          <input type="file" class="form-control" #fileInput (change)="onFileSelected($event)" >
+          <img [src]="image" width="100px" height="100px" alt="Profile Image" class="profile-img rounded rounded-pill"
+            (click)="fileInput.click()">
+          <input type="file" class="form-control" #fileInput (change)="onFileSelected($event)">
         </div>
-        
-        
+
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -243,7 +259,7 @@
               <label for="national_code" class="form-label">کد ملی</label>
               <input class="form-control" id="national_code" type="text" formControlName="national_code">
             </div>
-            <button type="submit" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#exampleModal"
+            <button type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
               type="submit" class="btn btn-success">ویرایش</button>
           </form>
         </div>
@@ -251,7 +267,8 @@
         <!-- Doctor Profile -->
         <div class="" *ngIf="is_doctor" style="direction: rtl;">
           <div class="d-flex">
-            <img data-bs-toggle="modal" data-bs-target="#ChangeImageModal" alt="Doctor Image" width="190px"  height="180px" class="rounded-circle me-4" [src]="image">
+            <img data-bs-toggle="modal" data-bs-target="#ChangeImageModal" alt="Doctor Image" width="190px"
+              height="180px" class="rounded-circle me-4" [src]="image">
             <div class="w-75">
               <form [formGroup]="DoctorprofileForm" class="w-75">
                 <h5 class="mb-3 fw-bold">ویرایش اطلاعات کاربری</h5>
@@ -287,16 +304,18 @@
               <form [formGroup]="WorkingHoursForm" class="w-75 mt-4">
                 <h5 class="fw-bold">ویرایش زمان حضور در مجموعه</h5>
                 <div formArrayName="workSchedule" *ngIf="!empty_hours">
-                  <div class="d-flex align-items-center gap-2 mt-3" *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
+                  <div class="d-flex align-items-center gap-2 mt-3"
+                    *ngFor="let schedule of workScheduleArray.controls; let i = index" [formGroupName]="i">
                     <div class="mb-3">
-                      <input class="form-control" readonly *ngIf="waiting_delete" id="day-{{i}}" type="text" formControlName="day">
+                      <input class="form-control" readonly *ngIf="waiting_delete" id="day-{{i}}" type="text"
+                        formControlName="day">
                     </div>
                     <div class="mb-3">
                       <input class="form-control" readonly id="start_time-{{i}}" type="text"
                         formControlName="start_time">
                     </div>
                     <div class="mb-3">
-                      <input class="form-control"  readonly id="end_time-{{i}}" type="text" formControlName="end_time">
+                      <input class="form-control" readonly id="end_time-{{i}}" type="text" formControlName="end_time">
                     </div>
                     <button class="btn btn-danger mb-3" (click)="removeSchedule(i)">
                       حذف
@@ -335,17 +354,17 @@
                           formControlName="graduation_year">
                       </div>
                     </div>
-                   <div class="d-flex align-items-center justify-content-between">
-                    <button class="btn btn-danger mb-3" >
-                      حذف
-                    </button>
-                    <button class="btn btn-success mb-3" >
-                      ویرایش
-                    </button>
-                   </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <button class="btn btn-danger mb-3">
+                        حذف
+                      </button>
+                      <button class="btn btn-success mb-3">
+                        ویرایش
+                      </button>
+                    </div>
                   </div>
-                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EducationModal" type="submit"
-                    class="btn btn-primary">افزودن</button>
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EducationModal"
+                    type="submit" class="btn btn-primary">افزودن</button>
                 </div>
               </form>
 

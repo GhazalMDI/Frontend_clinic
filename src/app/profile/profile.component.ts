@@ -40,14 +40,41 @@ export class ProfileComponent {
     "4": "جمعه"
   };
 
+  contries: { value: string; display: string }[] = [];
+  univercities: { name: string; country: string }[] = [];
+  filteredUniversities: { name: string }[] = [];
+  selectedCountry: string = '';
+
+  constructor(private fb: FormBuilder, private prof: ProfileService, private router: Router, private cd: ChangeDetectorRef) { }
 
 
 
-  constructor(private fb: FormBuilder, private prof: ProfileService, private router: Router ,private cd: ChangeDetectorRef) { }
+  onCountryChange(): void {
+    console.log('Selected Country:', this.selectedCountry); // مقدار کشور رو ببین
+    // استخراج نام انگلیسی از فرمت "نیوزیلند (New Zealand)"
+    const match = this.selectedCountry.match(/\(([^)]+)\)/);
+    const englishName = match ? match[1] : this.selectedCountry.trim();
 
+    console.log('Extracted English Country Name:', englishName); // مقدار پردازش‌شده
+
+      this.filteredUniversities = this.univercities.filter(
+        (uni) => uni.country.trim().toLowerCase() === englishName.toLowerCase()
+      );
+
+  }
 
 
   ngOnInit() {
+    this.prof.getCountries().subscribe((data) => {
+      this.contries = data
+    })
+    this.prof.getUniversities().subscribe((data) => {
+      this.univercities = data
+    })
+
+
+
+
     this.DoctorprofileForm = this.fb.group({
       first_name: [''],
       last_name: [''],
@@ -253,7 +280,7 @@ export class ProfileComponent {
     if (this.WorkingHoursForm.valid) {
       console.log(this.WorkingHoursForm.value.workSchedule)
       const payload = {
-        type:'workSchedule',
+        type: 'workSchedule',
         work_hours: this.WorkingHoursForm.value.workSchedule
       };
       this.prof.createWorkingHour(payload).subscribe(
@@ -311,8 +338,8 @@ export class ProfileComponent {
   }
 
 
-  
-  
+
+
   addEducation() {
     const educationRow = this.fb.group({
       academic_field: ['', Validators.required],
@@ -324,12 +351,12 @@ export class ProfileComponent {
     this.educations1.push(educationRow);
   }
 
-  
+
   educations1: any[] = [{ academic_field: '', university: '', graduation_year: '', country: '' }]; // شروع با یک سطر
   addEducationRow() {
     this.educations1.push({ academic_field: '', university: '', graduation_year: '', country: '' });
   }
-// توابع مربوط به آپلود عکس
+  // توابع مربوط به آپلود عکس
 
   onFileSelected(event: any) {
     const file = event.target.files[0]; // دریافت فایل انتخاب‌شده توسط کاربر
@@ -351,10 +378,10 @@ export class ProfileComponent {
       }
     }
   }
-    uploadImage(file: File) {
+  uploadImage(file: File) {
     const formData = new FormData();
     formData.append('image', file); // اضافه کردن فایل فشرده‌شده یا اصلی به FormData
-  
+
     this.prof.updateProfileImage(formData).subscribe({
       next: (response) => {
         console.log('تصویر با موفقیت آپلود شد', response);
@@ -367,32 +394,31 @@ export class ProfileComponent {
     });
   }
 
-  compressImage(file:File,quality:number,callback:(compresFile:File)=>void){
+  compressImage(file: File, quality: number, callback: (compresFile: File) => void) {
     const reader = new FileReader()
     reader.readAsDataURL(file);
-    reader.onload = (event)=>{
+    reader.onload = (event) => {
       const img = new Image();
       img.src = event.target?.result as string;
-      img.onload = () =>{
+      img.onload = () => {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d');
         const maxWidth = 800
         const scaleSize = maxWidth / img.width
         canvas.width = maxWidth
         canvas.height = img.height * scaleSize;
-        ctx?.drawImage(img,0,0,canvas.width,canvas.height)
-        canvas.toBlob((blob)=>{
-          if(blob){
-            const compressedFile = new File([blob],file.name,{type:'image/jpeg',lastModified:Date.now()})
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height)
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const compressedFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() })
             callback(compressedFile)
           }
-        },'image/jpeg',quality)
+        }, 'image/jpeg', quality)
       }
     }
-
   }
 
-  
+
 }
 
 
