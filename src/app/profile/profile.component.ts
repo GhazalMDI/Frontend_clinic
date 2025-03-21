@@ -19,6 +19,7 @@ export class ProfileComponent {
   WorkingHoursForm!: FormGroup
   EducationForm!: FormGroup
   CertificationForm!: FormGroup
+  academic_fields:{name:string,id:number}[] = []
   modalWorkScheduleArray!: any[]
   is_doctor: Boolean = true;
   image!: String;
@@ -49,29 +50,33 @@ export class ProfileComponent {
 
 
 
-  onCountryChange(): void {
-    console.log('Selected Country:', this.selectedCountry); // مقدار کشور رو ببین
-    // استخراج نام انگلیسی از فرمت "نیوزیلند (New Zealand)"
-    const match = this.selectedCountry.match(/\(([^)]+)\)/);
-    const englishName = match ? match[1] : this.selectedCountry.trim();
-
-    console.log('Extracted English Country Name:', englishName); // مقدار پردازش‌شده
-
-      this.filteredUniversities = this.univercities.filter(
-        (uni) => uni.country.trim().toLowerCase() === englishName.toLowerCase()
-      );
-
+  onCountryChange(edu: any): void {
+    console.log('Selected Country:', edu.country);
+  
+    // استخراج نام انگلیسی کشور از فرمت "نیوزیلند (New Zealand)"
+    const match = edu.country.match(/\(([^)]+)\)/);
+    const englishName = match ? match[1] : edu.country.trim();
+  
+    console.log('Extracted English Country Name:', englishName);
+  
+    // فیلتر کردن دانشگاه‌ها بر اساس کشور انتخاب شده
+    this.filteredUniversities = this.univercities.filter(
+      (uni) => uni.country.trim().toLowerCase() === englishName.toLowerCase()
+    );
   }
 
 
   ngOnInit() {
+
+
+    
+
     this.prof.getCountries().subscribe((data) => {
       this.contries = data
     })
     this.prof.getUniversities().subscribe((data) => {
       this.univercities = data
     })
-
 
 
 
@@ -115,11 +120,15 @@ export class ProfileComponent {
   showProfile() {
     this.prof.GetProfileData().subscribe(
       (response) => {
+        console.log("Response Data: ", response.data);
+
+
         const userData = response.data.user;
         const work_hours = response.data.work_hours;
         const educ = response.data.education;
         const certi = response.data.certificates;
-        console.log(work_hours)
+        this.academic_fields = response.data.academic_field
+        console.log(educ)
         if (response.data.status_doctor == true) {
           this.is_doctor = true
           this.DoctorprofileForm.patchValue({
@@ -145,18 +154,21 @@ export class ProfileComponent {
               }))
             })
           }
+          console.log('Education Data:', response.data.education);
+
 
           if (educ.length > 0) {
             const education_array = this.EducationForm.get('doctorEducation') as FormArray;
             educ.forEach((e: any) => {
               education_array.push(this.fb.group({
-                field: new FormControl(e.academic_field['name']),
+                academic_field: new FormControl(e.academic_field?.name || ''), // مقدار مستقیم
                 country: new FormControl(e.country),
                 university: new FormControl(e.university),
                 graduation_year: new FormControl(e.graduation_year)
-              }))
-            })
+              }));
+            });
           }
+          
 
           if (work_hours.length > 0) {
             const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;
@@ -203,6 +215,8 @@ export class ProfileComponent {
     )
   }
 
+
+  
   get workScheduleArray(): FormArray {
     return this.WorkingHoursForm.get('workSchedule') as FormArray;
   }
@@ -276,25 +290,54 @@ export class ProfileComponent {
     }
 
   }
-  submitWokingForm() {
-    if (this.WorkingHoursForm.valid) {
-      console.log(this.WorkingHoursForm.value.workSchedule)
+  // submitWokingForm() {
+  //   if (this.WorkingHoursForm.valid) {
+  //     console.log(this.WorkingHoursForm.value.workSchedule)
+  //     const payload = {
+  //       type: 'workSchedule',
+  //       work_hours: this.WorkingHoursForm.value.workSchedule
+  //     };
+  //     this.prof.createWorkingHour(payload).subscribe(
+  //       response => {
+  //         console.log('داده‌ها با موفقیت ارسال شدند', response);
+  //       },
+  //       error => {
+  //         console.error('خطا در ارسال داده‌ها', error);
+  //       }
+  //     );
+  //   } else {
+  //     console.error('فرم نامعتبر است');
+  //   }
+  // }
+
+
+
+  submitEducationForm(){
+    if (this.EducationForm.valid){
+      console.log(this.EducationForm.value.doctorEducation)
       const payload = {
-        type: 'workSchedule',
-        work_hours: this.WorkingHoursForm.value.workSchedule
+        type:'Educations',
+        education : this.EducationForm.value.doctorEducation
       };
-      this.prof.createWorkingHour(payload).subscribe(
-        response => {
-          console.log('داده‌ها با موفقیت ارسال شدند', response);
+      this.prof.createEducations(payload).subscribe(
+        response =>{
+          console.log('داده ها با موفقیت ارسال شد',response);
         },
-        error => {
-          console.error('خطا در ارسال داده‌ها', error);
+        error=>{
+          console.error('خطا در ارسال داده ها',error)
         }
       );
-    } else {
-      console.error('فرم نامعتبر است');
+      }
+      else{
+        console.error('فرم نامعتبر است')
+      }
     }
-  }
+  
+
+
+
+
+
 
   addWorkSchedule() {
     const newWorkSchedule = this.fb.group({
@@ -312,6 +355,7 @@ export class ProfileComponent {
   }
 
   submitAll() {
+    console.log(this.workSchedules1)
     const convertedSchedules = this.workSchedules1.map(schedule => {
       const dayValue = schedule.day?.trim(); // حذف فاصله‌های اضافی
       const convertedDay = Object.keys(this.DAYS_MAP).find(key => this.DAYS_MAP[key] === dayValue);
@@ -321,8 +365,12 @@ export class ProfileComponent {
       };
     });
 
+    const requestData = {
+      schedules: convertedSchedules
+    };
 
-    this.prof.createWorkingHour(convertedSchedules).subscribe(
+
+    this.prof.createWorkingHour(requestData).subscribe(
       response => {
         console.log('داده‌ها ارسال شد:', response);
         setTimeout(() => {
@@ -356,6 +404,33 @@ export class ProfileComponent {
   addEducationRow() {
     this.educations1.push({ academic_field: '', university: '', graduation_year: '', country: '' });
   }
+
+  submitEducation() {
+
+    const requestData = {
+      Educations: this.educations1
+    };
+    console.log(requestData)
+
+
+    this.prof.createWorkingHour(requestData).subscribe(
+      response => {
+        console.log('داده‌ها ارسال شد:', response);
+        setTimeout(() => {
+          (window as any).location.reload();
+        }, 100);
+        // this.workSchedules1 = [{ day: '', start_time: '', end_time: '' }]; // پاک کردن فرم بعد از ثبت
+
+      },
+      error => {
+        console.error('خطا در ارسال داده‌ها:', error);
+      }
+    );
+  }
+
+
+
+
   // توابع مربوط به آپلود عکس
 
   onFileSelected(event: any) {
@@ -418,6 +493,8 @@ export class ProfileComponent {
     }
   }
 
+
+  
 
 }
 

@@ -8,27 +8,37 @@ import { AuthService } from './auth.service';
 })
 export class ProfileService {
   constructor(private http: HttpClient, private authService: AuthService) { }
+  ProfileUrl = 'http://127.0.0.1:8000/API/Accounts/profile/'
 
+
+  getAcademicFields(): Observable<any[]> {
+    let accessToken = this.authService.getAccessToken()
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`
+    });
+
+    return this.http.get<any[]>(this.ProfileUrl);
+  }
+
+  
 
   GetProfileData(): Observable<any> {
-    const url = 'http://127.0.0.1:8000/API/Accounts/profile/'
+    // const url = 'http://127.0.0.1:8000/API/Accounts/profile/'
     let accessToken = this.authService.getAccessToken()
     console.log('you is profile service')
     console.log(accessToken)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`
     });
-    console.log(headers)
-    return this.http.get(url, { headers })
+    return this.http.get(this.ProfileUrl, { headers })
 
   }
   editProfile(data: any): Observable<any> {
-    const url = 'http://127.0.0.1:8000/API/Accounts/profile/'
     let accessToken = this.authService.getAccessToken()
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`
     });
-    return this.http.patch(url, data, { headers })
+    return this.http.patch(this.ProfileUrl, data, { headers })
   }
 
   deleteWorkingHour(id: number): Observable<any> {
@@ -36,20 +46,30 @@ export class ProfileService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${accessToken}`
     });
-    const url = 'http://127.0.0.1:8000/API/Accounts/profile/'
-    return this.http.delete(`${url}?working_hour_id=${id}`, { headers });
+    return this.http.delete(`${this.ProfileUrl}?working_hour_id=${id}`, { headers });
   }
 
   createWorkingHour(data: any): Observable<any> {
-    const url = 'http://127.0.0.1:8000/API/Accounts/profile/'
 
     let accessToken = this.authService.getAccessToken()
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       'Authorization': `Bearer ${accessToken}` // اگر نیاز به احراز هویت دارید
     });
 
-    return this.http.post(`${url}`, data, { headers });
+    return this.http.post(`${this.ProfileUrl}`, data, { headers });
+  }
+
+  createEducations(data: any):Observable <any>{
+    let accessToken = this.authService.getAccessToken()
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}` // اگر نیاز به احراز هویت دارید
+    })
+    return this.http.post(`${this.ProfileUrl}`,data,{headers})
+    
+
   }
 
 
@@ -95,6 +115,8 @@ export class ProfileService {
       )
     );
   }
+
+  
 
 }
 
