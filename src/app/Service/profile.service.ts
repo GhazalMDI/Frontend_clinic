@@ -49,6 +49,14 @@ export class ProfileService {
     return this.http.delete(`${this.ProfileUrl}?working_hour_id=${id}`, { headers });
   }
 
+  deleteEducation(id:number):Observable <any>{
+    let accessToken = this.authService.getAccessToken()
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`
+    });
+    return this.http.delete(`${this.ProfileUrl}?education_id=${id}`, { headers });
+  }
+
   createWorkingHour(data: any): Observable<any> {
 
     let accessToken = this.authService.getAccessToken()

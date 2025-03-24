@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ProfileService } from '../Service/profile.service';
 import { response } from 'express';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormControlName, FormGroup, Validators } from '@angular/forms';
 import { Console, error } from 'console';
 import { Router } from '@angular/router';
 import { window } from 'rxjs';
@@ -128,7 +128,6 @@ export class ProfileComponent {
         const educ = response.data.education;
         const certi = response.data.certificates;
         this.academic_fields = response.data.academic_field
-        console.log(educ)
         if (response.data.status_doctor == true) {
           this.is_doctor = true
           this.DoctorprofileForm.patchValue({
@@ -154,13 +153,11 @@ export class ProfileComponent {
               }))
             })
           }
-          console.log('Education Data:', response.data.education);
-
-
           if (educ.length > 0) {
             const education_array = this.EducationForm.get('doctorEducation') as FormArray;
             educ.forEach((e: any) => {
               education_array.push(this.fb.group({
+                id:new FormControl(e.id),
                 academic_field: new FormControl(e.academic_field?.name || ''), // مقدار مستقیم
                 country: new FormControl(e.country),
                 university: new FormControl(e.university),
@@ -168,8 +165,7 @@ export class ProfileComponent {
               }));
             });
           }
-          
-
+        
           if (work_hours.length > 0) {
             const workScheduleArray = this.WorkingHoursForm.get('workSchedule') as FormArray;
             work_hours.forEach((wh: any) => {
@@ -189,15 +185,10 @@ export class ProfileComponent {
               else if (wh.delete_record === 'ACCEPTED' || wh.delete_record === 'NOT_ACCEPTED') {
                 this.waiting_delete = false;
               }
-
-
             });
           }
         }
         else if (response.data.status_doctor == false) {
-          console.log('the user')
-          console.log(response.data.status_doctor)
-
           this.is_doctor = false
           this.ProfileForm.patchValue({
             first_name: userData.first_name,
@@ -215,8 +206,6 @@ export class ProfileComponent {
     )
   }
 
-
-  
   get workScheduleArray(): FormArray {
     return this.WorkingHoursForm.get('workSchedule') as FormArray;
   }
@@ -236,12 +225,14 @@ export class ProfileComponent {
     }
 
     const schedule = this.workScheduleArray.at(index);
+    console.log(schedule)
     if (!schedule) {
       console.error('Schedule not found at index:', index);
       return;
     }
 
     const id = schedule.value?.id; // بررسی مقدار id
+    console.log(id)
     if (id !== undefined && id !== null) {
       this.prof.deleteWorkingHour(id).subscribe(() => {
         this.workScheduleArray.removeAt(index);
@@ -256,6 +247,32 @@ export class ProfileComponent {
     }
   }
 
+  removeEducation(index:number){
+    if (!this.education_array || index < 0 || index >= this.education_array.length) {
+      console.error('Invalid index:', index);
+      return;
+    }
+
+    const edu = this.education_array.at(index);
+    console.log(edu)
+    if (!edu) {
+      console.error('Schedule not found at index:', index);
+      return;
+    }
+
+    const id = edu.value?.id; // بررسی مقدار id
+    console.log(id)
+    if (id !== undefined && id !== null) {
+      this.prof.deleteEducation(id).subscribe(() => {
+        this.education_array.removeAt(index);
+      }, error => {
+        alert('خطا در حذف رکورد');
+      });
+    } else {
+      this.education_array.removeAt(index);
+    }
+  }
+  
 
   editProfile() {
     const formData = this.is_doctor ? this.DoctorprofileForm.value : this.ProfileForm.value;
@@ -290,25 +307,6 @@ export class ProfileComponent {
     }
 
   }
-  // submitWokingForm() {
-  //   if (this.WorkingHoursForm.valid) {
-  //     console.log(this.WorkingHoursForm.value.workSchedule)
-  //     const payload = {
-  //       type: 'workSchedule',
-  //       work_hours: this.WorkingHoursForm.value.workSchedule
-  //     };
-  //     this.prof.createWorkingHour(payload).subscribe(
-  //       response => {
-  //         console.log('داده‌ها با موفقیت ارسال شدند', response);
-  //       },
-  //       error => {
-  //         console.error('خطا در ارسال داده‌ها', error);
-  //       }
-  //     );
-  //   } else {
-  //     console.error('فرم نامعتبر است');
-  //   }
-  // }
 
 
 
@@ -333,11 +331,6 @@ export class ProfileComponent {
       }
     }
   
-
-
-
-
-
 
   addWorkSchedule() {
     const newWorkSchedule = this.fb.group({
