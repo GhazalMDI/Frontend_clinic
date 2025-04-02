@@ -18,6 +18,7 @@ export class ProfileComponent {
   ProfileForm!: FormGroup
   WorkingHoursForm!: FormGroup
   EducationForm!: FormGroup
+  EditEducationForm!:FormGroup
   CertificationForm!: FormGroup
   academic_fields:{name:string,id:number}[] = []
   modalWorkScheduleArray!: any[]
@@ -25,6 +26,7 @@ export class ProfileComponent {
   image!: String;
   toastMessage!: { message: string; type: 'success' | 'error' };
   isToastVisible!: boolean;
+  educationId !: number 
   workSchedule !: []
   empty_hours: boolean = false
   waiting_delete: boolean = false
@@ -68,7 +70,13 @@ export class ProfileComponent {
 
   ngOnInit() {
 
-
+ this.EditEducationForm = this.fb.group({
+      country: [''],
+      univercity: [''],
+      graduation_year: [''],
+      academic_field: [''],
+      educationId:['']
+    });
     
 
     this.prof.getCountries().subscribe((data) => {
@@ -288,6 +296,27 @@ export class ProfileComponent {
     )
   }
 
+  editeducation(e:number){
+   this.prof.editEducation(e).subscribe(
+    (response)=>{
+
+      this.EditEducationForm.patchValue({
+        country: response.data.country,
+        univercity: response.data.university,
+        academic_field: response.data.academic_field,
+        graduation_year: response.data.graduation_year,
+      })
+      this.educationId = response.data.id
+
+      console.log(response)
+    },
+    (error) => {
+      console.log('Error updating', error);
+      this.showToast('خطا در ذخیره تغییرات رخ داده است، لطفاً دوباره تلاش کنید.', 'error'); // نمایش پیام خطا
+    }
+   ) 
+  }
+
 
   showToast(message: string, type: 'success' | 'error') {
     this.toastMessage = { message, type }; // تنظیم پیام و نوع آن
@@ -412,7 +441,6 @@ export class ProfileComponent {
         setTimeout(() => {
           (window as any).location.reload();
         }, 100);
-        // this.workSchedules1 = [{ day: '', start_time: '', end_time: '' }]; // پاک کردن فرم بعد از ثبت
 
       },
       error => {
@@ -420,6 +448,27 @@ export class ProfileComponent {
       }
     );
   }
+
+
+  submitEditEducation(): void {
+    if (this.EditEducationForm.valid) {
+      const updatedData = this.EditEducationForm.value; // مقادیر فرم را دریافت می‌کنیم
+      updatedData.edit_edu = this.educationId; // ID رکوردی که قرار است ویرایش شود را اضافه می‌کنیم
+  
+      this.prof.submitEducation(updatedData).subscribe(
+        response => {
+          this.showToast('اطلاعات شما با موفقیت ذخیره شد', 'success');
+          console.log('داده‌ها با موفقیت به‌روزرسانی شد:');
+        },
+        error => {
+          console.error('خطا در آپدیت داده‌ها:');
+        }
+      );
+    } else {
+      console.log('فرم معتبر نیست:', this.EditEducationForm.errors);
+    }
+  }
+  
 
 
 
@@ -446,6 +495,10 @@ export class ProfileComponent {
       }
     }
   }
+
+
+
+
   uploadImage(file: File) {
     const formData = new FormData();
     formData.append('image', file); // اضافه کردن فایل فشرده‌شده یا اصلی به FormData

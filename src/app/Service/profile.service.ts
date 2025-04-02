@@ -57,6 +57,30 @@ export class ProfileService {
     return this.http.delete(`${this.ProfileUrl}?education_id=${id}`, { headers });
   }
 
+
+  editEducation(id: number): Observable<any> {
+    let accessToken = this.authService.getAccessToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json' 
+    });
+  
+    return this.http.get(`${this.ProfileUrl}?edit_edu=${id}`,{ headers });
+  }
+
+  submitEducation(updatedData: any): Observable<any> {
+    let accessToken = this.authService.getAccessToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.patch(this.ProfileUrl, updatedData, { headers });
+  }
+  
+  
+  
+  
+
   createWorkingHour(data: any): Observable<any> {
 
     let accessToken = this.authService.getAccessToken()
@@ -76,8 +100,6 @@ export class ProfileService {
       'Authorization': `Bearer ${accessToken}` // اگر نیاز به احراز هویت دارید
     })
     return this.http.post(`${this.ProfileUrl}`,data,{headers})
-    
-
   }
 
 
@@ -85,6 +107,7 @@ export class ProfileService {
     const url = 'http://127.0.0.1:8000/API/Accounts/profile/';
     let accessToken = this.authService.getAccessToken();
     const headers = new HttpHeaders({
+      
       'Authorization': `Bearer ${accessToken}` // احراز هویت
     });
 
