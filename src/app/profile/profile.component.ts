@@ -456,11 +456,11 @@ export class ProfileComponent {
       updatedData.edit_edu = this.educationId; // ID رکوردی که قرار است ویرایش شود را اضافه می‌کنیم
   
       this.prof.submitEducation(updatedData).subscribe(
-        response => {
+        (response) => {
           this.showToast('اطلاعات شما با موفقیت ذخیره شد', 'success');
           console.log('داده‌ها با موفقیت به‌روزرسانی شد:');
         },
-        error => {
+        (error) => {
           console.error('خطا در آپدیت داده‌ها:');
         }
       );
