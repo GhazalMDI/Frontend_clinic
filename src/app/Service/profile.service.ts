@@ -57,6 +57,15 @@ export class ProfileService {
     return this.http.delete(`${this.ProfileUrl}?education_id=${id}`, { headers });
   }
 
+  deleteCertificate(id:number):Observable <any>{
+    let accessToken = this.authService.getAccessToken()
+    const headers = new HttpHeaders({
+      Authorization : `Bearer ${accessToken}`
+    })
+    return this.http.delete(`${this.ProfileUrl}?certificate_id=${id}`,{ headers });
+
+  }
+
 
   editEducation(id: number): Observable<any> {
     let accessToken = this.authService.getAccessToken();

@@ -164,6 +164,7 @@ export class ProfileComponent {
             const certi_array = this.CertificationForm.get('doctorCertification') as FormArray;
             certi.forEach((e: any) => {
               certi_array.push(this.fb.group({
+                id:new FormControl(e.id),
                 certificate_name: new FormControl(e.certificate_name),
                 issuing_institution: new FormControl(e.issuing_institution),
                 date_issue: new FormControl(e.date_issue),
@@ -530,7 +531,33 @@ export class ProfileComponent {
     }
   }
   
+  deleteCertification(certi_id:number){
+    console.log(certi_id)
+    if (!this.certi_array || certi_id < 0 || certi_id >= this.certi_array.length) {
+      console.error('Invalid index:', certi_id);
+      return;
+    }
 
+    const cer = this.certi_array.at(certi_id);
+    console.log(cer)
+    if (!cer) {
+      console.error('certification not found at id:', certi_id);
+      return;
+    }
+
+    const id = cer.value?.id; // بررسی مقدار id
+    console.log(id)
+    if (id !== undefined && id !== null) {
+      this.prof.deleteCertificate(id).subscribe(() => {
+        this.certi_array.removeAt(certi_id);
+      }, error => {
+        alert('خطا در حذف رکورد');
+      });
+    } else {
+      this.certi_array.removeAt(certi_id);
+    }
+  
+  }
 
 
 
