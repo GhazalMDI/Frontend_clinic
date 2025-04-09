@@ -178,7 +178,7 @@ export class ProfileComponent {
               console.log(e)
               education_array.push(this.fb.group({
                 id:new FormControl(e.id),
-                academic_field: new FormControl(e.academic_field.name), // مقدار مستقیم
+                academic_field: new FormControl(e.academic_field_ser.name), // مقدار مستقیم
                 country: new FormControl(e.country),
                 university: new FormControl(e.university),
                 graduation_year: new FormControl(e.graduation_year)
@@ -311,11 +311,11 @@ export class ProfileComponent {
   editeducation(e: number) {
     this.prof.editEducation(e).subscribe(
       (response) => {
-        console.log(response.data.academic_field.name)
+        console.log(response.data.academic_field_ser.name)
         // اول مقدار کشور رو تنظیم می‌کنیم
         this.EditEducationForm.patchValue({
           country: response.data.country,
-          academic_field: response.data.academic_field.id,
+          academic_field: response.data.academic_field_ser.id,
           graduation_year: response.data.graduation_year,
         });
   
