@@ -12,6 +12,7 @@ import { window } from 'rxjs';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
+  filteredUniversities1 :any[]=[];
   Accesstoken: string = ''
   information: any[] = []
   DoctorprofileForm!: FormGroup
@@ -52,6 +53,8 @@ export class ProfileComponent {
 
 
 
+
+
   onCountryChange(edu: any): void {
     console.log('Selected Country:', edu.country);
   
@@ -77,7 +80,15 @@ export class ProfileComponent {
       academic_field: [''],
       educationId:['']
     });
-    
+
+
+    this.EditEducationForm.get('country')?.valueChanges.subscribe((newCountry) => {
+      this.onCountryChange({ country: newCountry });
+  
+      // مقدار دانشگاه رو پاک می‌کنیم تا کاربر مجبور شه از لیست جدید انتخاب کنه
+      this.EditEducationForm.patchValue({ univercity: '' });
+    });
+  
 
     this.prof.getCountries().subscribe((data) => {
       this.contries = data
@@ -164,9 +175,10 @@ export class ProfileComponent {
           if (educ.length > 0) {
             const education_array = this.EducationForm.get('doctorEducation') as FormArray;
             educ.forEach((e: any) => {
+              console.log(e)
               education_array.push(this.fb.group({
                 id:new FormControl(e.id),
-                academic_field: new FormControl(e.academic_field?.name || ''), // مقدار مستقیم
+                academic_field: new FormControl(e.academic_field.name), // مقدار مستقیم
                 country: new FormControl(e.country),
                 university: new FormControl(e.university),
                 graduation_year: new FormControl(e.graduation_year)
@@ -296,26 +308,67 @@ export class ProfileComponent {
     )
   }
 
-  editeducation(e:number){
-   this.prof.editEducation(e).subscribe(
-    (response)=>{
-
-      this.EditEducationForm.patchValue({
-        country: response.data.country,
-        univercity: response.data.university,
-        academic_field: response.data.academic_field,
-        graduation_year: response.data.graduation_year,
-      })
-      this.educationId = response.data.id
-
-      console.log(response)
-    },
-    (error) => {
-      console.log('Error updating', error);
-      this.showToast('خطا در ذخیره تغییرات رخ داده است، لطفاً دوباره تلاش کنید.', 'error'); // نمایش پیام خطا
-    }
-   ) 
+  editeducation(e: number) {
+    this.prof.editEducation(e).subscribe(
+      (response) => {
+        console.log(response.data.academic_field.name)
+        // اول مقدار کشور رو تنظیم می‌کنیم
+        this.EditEducationForm.patchValue({
+          country: response.data.country,
+          academic_field: response.data.academic_field.id,
+          graduation_year: response.data.graduation_year,
+        });
+  
+        // بعد کشور رو تغییر می‌دیم تا لیست filteredUniversities پر بشه
+        this.onCountryChange({ country: response.data.country });
+  
+        // با یک تأخیر خیلی کوتاه، مقدار دانشگاه رو ست می‌کنیم
+        setTimeout(() => {
+          this.EditEducationForm.patchValue({
+            univercity: response.data.university
+          });
+        }, 0); // زمان کافی برای پر شدن filteredUniversities
+  
+        this.educationId = response.data.id;
+        console.log(response);
+      },
+      (error) => {
+        console.log('Error updating', error);
+        this.showToast('خطا در ذخیره تغییرات رخ داده است، لطفاً دوباره تلاش کنید.', 'error');
+      }
+    );
   }
+  
+  // editeducation(e: number) {
+  //   this.prof.editEducation(e).subscribe(
+  //     (response) => {
+  //       // اول مقدار کشور رو تنظیم می‌کنیم
+  //       this.EditEducationForm.patchValue({
+  //         country: response.data.country,
+  //         academic_field: response.data.academic_field,
+  //         graduation_year: response.data.graduation_year,
+  //       });
+  
+  //       // بعد کشور رو تغییر می‌دیم تا لیست filteredUniversities پر بشه
+  //       this.onCountryChange({ country: response.data.country });
+  
+  //       // با یک تأخیر خیلی کوتاه، مقدار دانشگاه رو ست می‌کنیم
+  //       setTimeout(() => {
+  //         this.EditEducationForm.patchValue({
+  //           univercity: response.data.university
+  //         });
+  //       }, 0); // زمان کافی برای پر شدن filteredUniversities
+  
+  //       this.educationId = response.data.id;
+  //       console.log(response);
+  //     },
+  //     (error) => {
+  //       console.log('Error updating', error);
+  //       this.showToast('خطا در ذخیره تغییرات رخ داده است، لطفاً دوباره تلاش کنید.', 'error');
+  //     }
+  //   );
+  // }
+  
 
 
   showToast(message: string, type: 'success' | 'error') {
@@ -448,6 +501,14 @@ export class ProfileComponent {
       }
     );
   }
+
+  // filteredUniversities = [];
+// onCountryChange(selectedCountryCode: string) {
+//   this.filteredUniversities = this.allUniversities.filter(u => u.country === selectedCountryCode);
+
+//   // اگه کاربر کشور رو عوض کرد، مقدار دانشگاه رو خالی کن
+//   this.EditEducationForm.patchValue({ university: '' });
+// }
 
 
   submitEditEducation(): void {
